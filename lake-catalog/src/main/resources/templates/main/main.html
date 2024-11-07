@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LakeView - Главная</title>
+    <link rel="stylesheet" href="main_styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">LakeView</h1>
+        <a href="account.html" class="profile-link">
+            <img src="../assets/avatar.jpg" alt="Профиль" class="profile-img">
+        </a>
+    </header>
+    
+    <div class="search-bar">
+        <div class="search-left">
+            <input type="text" placeholder="Поиск" class="search-input">
+            <button class="filter-btn">Фильтры</button>
+        </div>
+        <input type="text" placeholder="Поиск по карте" class="map-search">
+    </div>
+
+    <div class="main-content">
+        <button class="stats-btn">Статистика</button>
+        
+        <!-- Сетка озёр с карточками-ссылками -->
+        <div class="lake-grid">
+            <a href="lake_page.html" class="lake-card">
+                <img src="../assets/lake.jpg" alt="Ладожское озеро" class="lake-image">
+                <p class="lake-title">Ладожское озеро</p>
+            </a>
+            <a href="lake_page.html" class="lake-card">
+                <img src="../assets/lake.jpg" alt="Ладожское озеро" class="lake-image">
+                <p class="lake-title">Ладожское озеро</p>
+            </a>
+            <a href="lake_page.html" class="lake-card">
+                <img src="../assets/lake.jpg" alt="Ладожское озеро" class="lake-image">
+                <p class="lake-title">Ладожское озеро</p>
+            </a>
+            <a href="lake_page.html" class="lake-card">
+                <img src="../assets/lake.jpg" alt="Ладожское озеро" class="lake-image">
+                <p class="lake-title">Ладожское озеро</p>
+            </a>
+        </div>
+        
+        
+        <div class="pagination">
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+        </div>
+    </div>
+    <script src="main_script.js"></script>
+</body>
+</html>
