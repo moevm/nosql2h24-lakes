@@ -1,53 +1,73 @@
+// AuthController.java
 package com.example.lake_catalog.controller;
 
+import com.example.lake_catalog.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class AuthController {
 
+    private final AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
     // Первая страница
     @GetMapping("/")
     public String homePage() {
-        return "home";
+        return "home/home";
     }
 
     // Страница входа
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "login/login";
+    }
+
+    @GetMapping("/filtration")
+    public String filterPage() {
+        return "filtration/filtration";
     }
 
     // Страница регистрации
     @GetMapping("/register")
     public String registerPage() {
-        return "register";
+        return "register/register";
+    }
+
+    // Перенаправление на страницу /lakes/main после входа
+    @GetMapping("/main")
+    public String mainPage() {
+        return "redirect:/lakes/main";
     }
 
     // Обработка формы входа
     @PostMapping("/perform_login")
     public String performLogin(String email, String password) {
-        // Добавить логику аутентификации
-        boolean loginSuccess = true; // Заглушка, добавить проверку email и password
-
-        if (loginSuccess) {
-            return "redirect:/lakes"; // Переход на главную страницу после успешного входа
-        } else {
+        try {
+            authService.loginUser(email, password);
+            return "redirect:/lakes/main"; // Редирект на страницу озёр после успешного входа
+        } catch (RuntimeException e) {
             return "redirect:/login?error"; // Переход обратно на страницу входа с ошибкой
         }
     }
 
     // Обработка формы регистрации
     @PostMapping("/perform_register")
-    public String performRegister(String nickname, String email, String password, String confirmPassword) {
-        // Логика для проверки данных и создания нового пользователя
-        if (!password.equals(confirmPassword)) {
+    public String performRegister(String username, String email, String password, String confirm) {
+        if (!password.equals(confirm)) {
             return "redirect:/register?error=password_mismatch";
         }
-        
-        // Надо добавить код для сохранения пользователя в базе данных
-        return "redirect:/"; // Переход на первую страницу после успешной регистрации
+        try {
+            authService.registerUser(username, email, password);
+        } catch (RuntimeException e) {
+            return "redirect:/register?error=password_mismatch";
+        }
+        return "redirect:/lakes/main";
     }
 }

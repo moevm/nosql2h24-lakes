@@ -17,6 +17,9 @@ public class User {
     private LocalDate creationDate;
     private LocalDateTime editDate;
 
+    public User(){
+
+    }
     // Конструктор
     public User(Long id, String email, String password, String nickname, String photo, LocalDate creationDate, LocalDateTime editDate) {
         this.id = id;

@@ -31,6 +31,10 @@ public class Lake {
         this.description = description;
     }
 
+    public Lake(){
+
+    }
+
     // Геттеры и сеттеры
     public Long getId() {
         return id;
