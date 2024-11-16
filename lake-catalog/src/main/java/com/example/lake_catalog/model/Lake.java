@@ -1,13 +1,17 @@
 package com.example.lake_catalog.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Node
 public class Lake {
     @Id
+    @GeneratedValue
     private Long id;
     private String name;
     private String region;
@@ -18,6 +22,9 @@ public class Lake {
     private List<String> photos;
     private String description;
 
+    @Relationship(type = "HAS_REVIEW", direction = Relationship.Direction.OUTGOING)
+    private List<Review> reviews;
+
     // Конструктор
     public Lake(Long id, String name, String region, String city, double rating, double depth, double square, List<String> photos, String description) {
         this.id = id;
@@ -27,7 +34,7 @@ public class Lake {
         this.rating = rating;
         this.depth = depth;
         this.square = square;
-        this.photos = photos;
+        this.photos = new ArrayList<>();
         this.description = description;
     }
 
@@ -43,6 +50,11 @@ public class Lake {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getPrimaryPhoto() {
+        return (photos != null && !photos.isEmpty()) ? photos.get(0) : "/assets/lake.jpg";
+    }
+    
 
     public String getName() {
         return name;
@@ -97,8 +109,9 @@ public class Lake {
     }
 
     public void setPhotos(List<String> photos) {
-        this.photos = photos;
+        this.photos = (photos != null) ? photos : new ArrayList<>();
     }
+    
 
     public String getDescription() {
         return description;
