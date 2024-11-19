@@ -52,9 +52,8 @@ const submitButton = document.getElementById('submit-review-btn');
 const reviewInput = document.getElementById('review-input');
 const starRating = document.getElementById('star-rating');
 const pathParts = window.location.pathname.split('/');
-const lakeId = pathParts[pathParts.length - 1];  // Последняя часть URL (например, "123")
+const lakeId = pathParts[pathParts.length - 1]; 
 
-// Это глобальная переменная для хранения выбранного значения звезд
 let selectedValue = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -141,7 +140,7 @@ submitButton.addEventListener('click', () => {
     })
     .then(review => {
         console.log(review);
-        // После успешного добавления отзыва, отобразим его
+       
         const reviewElement = document.createElement('div');
         reviewElement.classList.add('review');
         reviewElement.innerHTML = `
