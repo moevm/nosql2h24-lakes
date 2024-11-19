@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LakeView</title>
-    <link rel="stylesheet" href="home_style.css">
+    <link rel="stylesheet" href="/css/home_style.css">
 </head>
 <body>
     <div class="container">
@@ -15,6 +15,19 @@
             <button class="btn secondary-btn" onclick="continueWithoutRegister()">Продолжить без регистрации</button>
         </div>
     </div>
-    <script src="home_script.js"></script>
+
+    <script>
+        function register() {
+            window.location.href = '/register';
+        }
+
+        function login() {
+            window.location.href = '/login';
+        }
+
+        function continueWithoutRegister() {
+            window.location.href = '/main';
+        }
+    </script>
 </body>
 </html>

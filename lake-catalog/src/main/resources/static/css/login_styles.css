@@ -7,7 +7,7 @@ body {
     background-color: #e6f0ff;
 }
 
-.register-container {
+.login-container {
     width: 100%;
     padding: 200px;
     text-align: center;
@@ -17,28 +17,7 @@ body {
     align-items: center;
 }
 
-.register-top {
-    /* width: 100%; */
-    display: flex;
-}
-.d-none {
-    display: none !important;
-}
-.alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-/* Красный alert для ошибок */
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-.register-title {
+.login-title {
     font-size: 3.5rem;
     color: #003366;
     margin-bottom: 50px;
@@ -51,31 +30,30 @@ body {
     background-color: transparent;
     border: 2px solid #003366;
     cursor: pointer;
-    margin-bottom: -120px;
+    margin-bottom: -120px; /* Чтобы кнопка "Назад" была ближе к заголовку */
     margin-left: 0; 
     align-self: flex-start; 
     font-family: 'Century Gothic', Arial, sans-serif;
 }
 
-
 .back-btn:hover {
     background-color: #f0f8ff;
 }
 
-.register-form {
+.login-form {
     display: flex;
     flex-direction: column;
     width: 300px;
     gap: 15px;
 }
 
-.register-form label {
+.login-form label {
     font-size: 1rem;
     color: #003366;
     text-align: left;
 }
 
-.register-form input {
+.login-form input {
     padding: 8px;
     border: 1px solid #cccccc;
     font-size: 1rem;
@@ -95,3 +73,21 @@ body {
 .submit-btn:hover {
     background-color: #002244;
 }
+
+.d-none {
+    display: none !important;
+    }
+    .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 1rem;
+    }
+    
+    /* Красный alert для ошибок */
+    .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    }

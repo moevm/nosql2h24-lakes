@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Century Gothic', Arial, sans-serif;
-    background-color: #DEE9FE;
+    background-color: #E6F0FF;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -147,4 +147,12 @@ header {
 
 .pagination a:hover {
     background-color: #002244;
+}
+
+.page-link.active {
+    font-weight: bold;
+    color: #5f98d6; /* Синий цвет для выделенной страницы */
+    background-color: #b6d7ff; /* Легкий фон для выделенной страницы */
+    border-radius: 5px;
+    padding: 5px 10px;
 }
