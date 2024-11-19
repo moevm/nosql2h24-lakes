@@ -22,9 +22,6 @@ public class Lake {
     private List<String> photos;
     private String description;
 
-    @Relationship(type = "HAS_REVIEW", direction = Relationship.Direction.OUTGOING)
-    private List<Review> reviews;
-
     // Конструктор
     public Lake(Long id, String name, String region, String city, double rating, double depth, double square, List<String> photos, String description) {
         this.id = id;

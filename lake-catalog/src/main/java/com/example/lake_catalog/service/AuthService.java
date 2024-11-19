@@ -13,15 +13,7 @@ import java.util.Optional;
 public class AuthService {
     private final UserRepository userRepository;
     private final UserService userService;
-    private User currentUser;
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User currentUser){
-        this.currentUser = currentUser;
-    }
+    
 
     @Autowired
     public AuthService(UserRepository userRepository, UserService userService) {
@@ -37,10 +29,10 @@ public class AuthService {
         user.setNickname(nickname);
         user.setPassword(password);
         userRepository.save(user);
-        setCurrentUser(userService.findUserByEmail(email).get());
+        //setCurrentUser(userService.findUserByEmail(email).get());
     }
 
-    public void loginUser(String email, String password){
+    public User loginUser(String email, String password){
         System.out.println(email);
         System.out.println(password);
         Optional<User> optionalUser = userService.findUserByEmail(email);
@@ -50,6 +42,7 @@ public class AuthService {
         if (!user.getPassword().equals(password)){
             throw new RuntimeException("Неверный пароль!");
         }
-        setCurrentUser(user);
+        //setCurrentUser(user);
+        return user;
     }
 }

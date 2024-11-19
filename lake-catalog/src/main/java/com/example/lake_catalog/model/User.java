@@ -1,6 +1,7 @@
 package com.example.lake_catalog.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Node;
 
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Node
 public class User {
     @Id
+    @GeneratedValue
     private Long id;
     private String email;
     private String password;

@@ -2,6 +2,9 @@
 package com.example.lake_catalog.controller;
 
 import com.example.lake_catalog.service.AuthService;
+
+import jakarta.servlet.http.HttpSession;
+import com.example.lake_catalog.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,9 +51,11 @@ public class AuthController {
 
     // Обработка формы входа
     @PostMapping("/perform_login")
-    public String performLogin(String email, String password) {
+    public String performLogin(String email, String password, HttpSession session) {
         try {
-            authService.loginUser(email, password);
+            User user = authService.loginUser(email, password);
+            session.setAttribute("currentUser", user);
+            System.out.println("Пользователь вошел: " + user.getEmail());
             return "redirect:/lakes/main"; // Редирект на страницу озёр после успешного входа
         } catch (RuntimeException e) {
             return "redirect:/login?error"; // Переход обратно на страницу входа с ошибкой
@@ -59,15 +64,18 @@ public class AuthController {
 
     // Обработка формы регистрации
     @PostMapping("/perform_register")
-    public String performRegister(String username, String email, String password, String confirm) {
+    public String performRegister(String username, String email, String password, String confirm, HttpSession session) {
         if (!password.equals(confirm)) {
             return "redirect:/register?error=password_mismatch";
         }
         try {
             authService.registerUser(username, email, password);
+            User user = authService.loginUser(email, password); // Автоматический вход после регистрации
+            session.setAttribute("currentUser", user);
+            System.out.println("Новый пользователь зарегистрирован: " + user.getEmail());
+            return "redirect:/lakes/main";
         } catch (RuntimeException e) {
             return "redirect:/register?error=password_mismatch";
         }
-        return "redirect:/lakes/main";
     }
 }

@@ -51,9 +51,63 @@ eyeButton.addEventListener('click', () => {
 const submitButton = document.getElementById('submit-review-btn');
 const reviewInput = document.getElementById('review-input');
 const starRating = document.getElementById('star-rating');
+const pathParts = window.location.pathname.split('/');
+const lakeId = pathParts[pathParts.length - 1];  // Последняя часть URL (например, "123")
 
 // Это глобальная переменная для хранения выбранного значения звезд
 let selectedValue = 0;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const pathParts = window.location.pathname.split('/');
+    const lakeId = pathParts[pathParts.length - 1];
+    //const lakeId = window.location.pathname.split('/').pop(); // Извлекаем lakeId из URL
+    fetch(`/lakes/lake_page/${lakeId}/reviews`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка при загрузке отзывов');
+            }
+            return response.json();
+        })
+        .then(reviews => {
+            console.log(reviews);
+            // После получения отзывов, добавляем их на страницу
+            const reviewsList = document.getElementById('reviews-list');
+            reviews.forEach(review => {
+                const reviewElement = createReviewElement(review);
+                reviewsList.appendChild(reviewElement);
+            });
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+});
+
+// Функция для создания элемента отзыва
+function createReviewElement(review) {
+    const nickname = review.user?.nickname || 'Анонимный пользователь';
+    const reviewElement = document.createElement('div');
+    reviewElement.classList.add('review');
+    reviewElement.innerHTML = `
+        <div class="review-user">
+            <img src="/assets/avatar.jpg" alt="Фото пользователя" class="user-photo">
+            <div class="user-info">
+                <h4>${nickname}</h4>
+                <p>${new Date(review.date).toLocaleDateString('ru-RU')}</p>
+            </div>
+        </div>
+        <div class="review-content">
+            <div class="review-rating">
+                <span>${'★'.repeat(review.stars)}</span>
+                <span>${'☆'.repeat(5 - review.stars)}</span>
+            </div>
+            <div class="review-text">
+                <p>${review.message}</p>
+            </div>
+        </div>
+    `;
+    return reviewElement;
+}
+
 
 submitButton.addEventListener('click', () => {
     // Проверяем, выбрал ли пользователь количество звезд и написал ли отзыв
@@ -61,40 +115,64 @@ submitButton.addEventListener('click', () => {
         alert('Пожалуйста, оцените озеро и напишите отзыв!');
         return;
     }
+    console.log(selectedValue);
 
     const reviewText = reviewInput.value.trim();
     const reviewData = {
-        rating: selectedValue, // Сохраняем выбранное значение
-        text: reviewText,
-        date: new Date().toLocaleString()
+        message: reviewText,
+        stars: selectedValue // Сохраняем выбранное значение    
     };
 
-    const reviewElement = document.createElement('div');
-    reviewElement.classList.add('review');
-    reviewElement.innerHTML = `
-        <div class="review-user">
-            <img src="/assets/avatar.jpg" alt="Фото пользователя" class="user-photo">
-            <div class="user-info">
-                <h4>Имя пользователя</h4>
-                <p>${reviewData.date}</p>
+    // Отправляем отзыв на сервер через fetch
+    fetch(`/lakes/lake_page/${lakeId}/reviews`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(errorText => {
+                throw new Error(errorText || 'Ошибка при добавлении отзыва');
+            });
+        }
+        return response.json();
+    })
+    .then(review => {
+        console.log(review);
+        // После успешного добавления отзыва, отобразим его
+        const reviewElement = document.createElement('div');
+        reviewElement.classList.add('review');
+        reviewElement.innerHTML = `
+            <div class="review-user">
+                <img src="/assets/avatar.jpg" alt="Фото пользователя" class="user-photo">
+                <div class="user-info">
+                    <h4>${review.user.nickname}</h4>
+                    <p>${new Date(review.date).toLocaleDateString('ru-RU')}</p>
+                </div>
             </div>
-        </div>
-        <div class="review-content">
-            <div class="review-rating">
-                <span>${'★'.repeat(reviewData.rating)}</span>  <!-- Отображаем количество выбранных звезд -->
+            <div class="review-content">
+                <div class="review-rating">
+                    <span>${'★'.repeat(review.stars)}</span> 
+                    <span>${'☆'.repeat(5 - review.stars)}</span>
+                </div>
+                <div class="review-text">
+                    <p>${review.message}</p>
+                </div>
             </div>
-            <div class="review-text">
-                <p>${reviewData.text}</p>
-            </div>
-        </div>
-    `;
-
-    document.getElementById('reviews-list').appendChild(reviewElement);
-    reviewInput.value = '';
-    // Сброс активных звезд после публикации отзыва
-    starRating.querySelectorAll('span').forEach(span => span.classList.remove('active'));
-    selectedValue = 0; // Сброс значения звезд
+        `;
+        document.getElementById('reviews-list').appendChild(reviewElement);
+        reviewInput.value = '';
+        // Сброс активных звезд после публикации отзыва
+        starRating.querySelectorAll('span').forEach(span => span.classList.remove('active'));
+        selectedValue = 0; // Сброс значения звезд
+    })
+    .catch(error => {
+        alert(error.message);
+    });
 });
+
 
 // Обработчик для клика на звезды
 starRating.addEventListener('click', (e) => {

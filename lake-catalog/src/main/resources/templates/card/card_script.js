@@ -47,12 +47,12 @@ eyeButton.addEventListener('click', () => {
     alert(isEyeFilled ? 'Добавлено в "Уже посетил"' : 'Удалено из "Уже посетил"');
 });
 
-// Обработчик отправки отзыва
 const submitButton = document.getElementById('submit-review-btn');
 const reviewInput = document.getElementById('review-input');
 const starRating = document.getElementById('star-rating');
 
-// Это глобальная переменная для хранения выбранного значения звезд
+const lakeId = document.getElementById('lake-id').value;  // Получаем lakeId из HTML
+
 let selectedValue = 0;
 
 submitButton.addEventListener('click', () => {
@@ -64,37 +64,59 @@ submitButton.addEventListener('click', () => {
 
     const reviewText = reviewInput.value.trim();
     const reviewData = {
-        rating: selectedValue, // Сохраняем выбранное значение
         text: reviewText,
-        date: new Date().toLocaleString()
+        rating: selectedValue
     };
 
-    const reviewElement = document.createElement('div');
-    reviewElement.classList.add('review');
-    reviewElement.innerHTML = `
-        <div class="review-user">
-            <img src="/assets/avatar.jpg" alt="Фото пользователя" class="user-photo">
-            <div class="user-info">
-                <h4>Имя пользователя</h4>
-                <p>${reviewData.date}</p>
+    // Отправляем отзыв на сервер через fetch
+    fetch(`/lakes/lake_page/${lakeId}/reviews`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + sessionStorage.getItem('authToken')  // Пример использования токена авторизации
+        },
+        body: JSON.stringify(reviewData), // Отправляем данные как JSON
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(errorText => {
+                throw new Error(errorText || 'Ошибка при добавлении отзыва');
+            });
+        }
+        return response.json();
+    })
+    .then(review => {
+        // После успешного добавления отзыва, отобразим его
+        const reviewElement = document.createElement('div');
+        reviewElement.classList.add('review');
+        reviewElement.innerHTML = `
+            <div class="review-user">
+                <img src="/assets/avatar.jpg" alt="Фото пользователя" class="user-photo">
+                <div class="user-info">
+                    <h4>${review.user.name}</h4>
+                    <p>${new Date(review.date).toLocaleString()}</p>
+                </div>
             </div>
-        </div>
-        <div class="review-content">
-            <div class="review-rating">
-                <span>${'★'.repeat(reviewData.rating)}</span>  <!-- Отображаем количество выбранных звезд -->
+            <div class="review-content">
+                <div class="review-rating">
+                    <span>${'★'.repeat(review.rating)}</span>  <!-- Отображаем количество выбранных звезд -->
+                </div>
+                <div class="review-text">
+                    <p>${review.text}</p>
+                </div>
             </div>
-            <div class="review-text">
-                <p>${reviewData.text}</p>
-            </div>
-        </div>
-    `;
-
-    document.getElementById('reviews-list').appendChild(reviewElement);
-    reviewInput.value = '';
-    // Сброс активных звезд после публикации отзыва
-    starRating.querySelectorAll('span').forEach(span => span.classList.remove('active'));
-    selectedValue = 0; // Сброс значения звезд
+        `;
+        document.getElementById('reviews-list').appendChild(reviewElement);
+        reviewInput.value = '';
+        // Сброс активных звезд после публикации отзыва
+        starRating.querySelectorAll('span').forEach(span => span.classList.remove('active'));
+        selectedValue = 0; // Сброс значения звезд
+    })
+    .catch(error => {
+        alert(error.message);
+    });
 });
+
 
 // Обработчик для клика на звезды
 starRating.addEventListener('click', (e) => {
