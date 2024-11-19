@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${lake.name}"></title> </title>
+    <link rel="stylesheet" href="/css/card_styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Кнопка "На главную" -->
+        
+
+        <!-- Заголовок и иконки -->
+        <div class="lake-header">
+            <button id="back-button" class="back-button">На главную</button>
+            <h1 th:text="${lake.name}"> </h1>
+            <div class="icon-container">
+                <!-- Кнопка для "хочу посетить" -->
+                <button id="heart-button" class="icon-button">
+                    <img id="heart-icon" src="/assets/heart.png" alt="Heart Icon" class="icon">
+                </button>
+        
+                <!-- Кнопка для "уже посетил" -->
+                <button id="eye-button" class="icon-button">
+                    <img id="eye-icon" src="/assets/eye.png" alt="Eye Icon" class="icon">
+                </button>
+            </div>
+        </div>
+
+        <!-- Слайдер изображений -->
+        <div class="slider">
+            <img src="/assets/left.png" alt="Left Arrow" class="arrow-button left-arrow">
+            <th:block th:each="photo : ${lake.photos}">
+                <img th:src="${photo}" alt="Lake Image" class="slider-image">
+            </th:block>
+            <img src="/assets/right.png" alt="Right Arrow" class="arrow-button right-arrow">
+        </div>
+
+        <!-- Описание -->
+        <section class="description">
+            <h2>Описание</h2>
+            <p th:text="${lake.description}"></p>
+        </section>
+
+        <!-- Справочная информация -->
+        <section class="info">
+            <h2>Справочная информация:</h2>
+            <ul>
+                <li>Максимальная глубина: <span th:text="${lake.depth}">0</span></li>
+                <li>Площадь: <span th:text="${lake.square}">0</span></li>
+                <li>Субъект РФ: <span th:text="${lake.region}">Неизвестно</span></li>
+                <li>Город: <span th:text="${lake.city}">Неизвестно</span></li>
+                <li>Рейтинг: <span th:text="${lake.rating}">0</span></li>
+            </ul>
+        </section>
+
+        <!-- Карта -->
+        <section class="map">
+            <h2>Местоположение</h2>
+            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=30.0,60.0,31.0,61.0&layer=mapnik" frameborder="0"></iframe>
+        </section>
+
+        <!-- Отзывы -->
+        <section class="reviews">
+            <h2>Отзывы</h2>
+            <div id="star-rating" class="star-rating">
+                <span data-value="1">★</span>
+                <span data-value="2">★</span>
+                <span data-value="3">★</span>
+                <span data-value="4">★</span>
+                <span data-value="5">★</span>
+            </div>
+            <div class="review-input-container">
+                
+                <textarea id="review-input" placeholder="Напишите отзыв"></textarea>
+                <button id="submit-review-btn">Отправить</button>
+                <!-- </div> -->
+            </div>
+            <div id="reviews-list">
+                
+            </div>
+            
+        </section>
+    </div>
+
+    <script src="/JavaScript/card_script.js"></script>
+</body>
+</html>

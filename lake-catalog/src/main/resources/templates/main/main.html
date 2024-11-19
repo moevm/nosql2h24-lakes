@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LakeView - Главная</title>
+    <link rel="stylesheet" href="/css/main_styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">LakeView</h1>
+        <a href="account.html" class="profile-link">
+            <img src="../assets/avatar.jpg" alt="Профиль" class="profile-img">
+        </a>
+    </header>
+
+    <div class="search-bar">
+        <div class="search-left">
+            <!-- Форма поиска озёр по имени -->
+            <form action="/lakes/main" method="get">
+                <input type="text" name="name" placeholder="Поиск по названию озера" class="search-input" >
+                <button type="submit" class="filter-btn">Поиск</button>
+            </form>
+            <button class="filter-btn" onclick="goFilter()">Фильтры</button>
+        </div>
+        <input type="text" placeholder="Поиск по карте" class="map-search">
+    </div>
+
+
+    <div class="main-content">
+        <button class="stats-btn">Статистика</button>
+
+        <!-- Результаты поиска и озёра -->
+        <div class="lake-grid">
+            <!-- Выводим результаты поиска или все озера -->
+            <th:block th:each="lake : ${lakePage.content}">
+                <a th:href="@{/lakes/lake_page/{id}(id=${lake.id})}" class="lake-card">
+                    <img th:src="${lake.primaryPhoto}" th:alt="${lake.name}" class="lake-image">
+                    <p class="lake-title" th:text="${lake.name}">Название озера</p>
+                </a>
+            </th:block>
+        </div>
+        
+
+        <!-- Пагинация -->
+        <div class="pagination">
+            <!-- Кнопка "Назад" -->
+            <a th:href="@{/lakes/main(page=${currentPage - 1}, name=${name})}"
+               th:if="${!lakePage.first}" class="page-link">Назад</a>
+
+            <!-- Отображение номеров страниц -->
+            <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                <a th:href="@{/lakes/main(page=${i}, name=${name})}"
+                   th:text="${i + 1}"
+                   th:class="${i == currentPage ? 'page-link active' : 'page-link'}"></a>
+            </th:block>
+
+            <!-- Кнопка "Вперед" -->
+            <a th:href="@{/lakes/main(page=${currentPage + 1}, name=${name})}"
+               th:if="${!lakePage.last}" class="page-link">Вперед</a>
+        </div>
+    </div>
+
+    <script src="/JavaScript/main_script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список озер</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Список озер</h1>
+    <ul>
+        <th:block th:each="lake : ${lakes}">
+            <li th:text="${lake.name}">Название озера</li>
+        </th:block>
+    </ul>
+</body>
+</html>
