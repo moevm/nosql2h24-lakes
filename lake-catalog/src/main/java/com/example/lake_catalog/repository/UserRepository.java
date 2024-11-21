@@ -11,5 +11,6 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     Optional<User> findByEmail(String email); // для поиска пользователя по email
     @Query("MATCH (r:Review)-[:POSTED_BY]->(u:User) WHERE id(r) = $reviewId RETURN u")
     User findUserByReviewId(Long reviewId);
+    Optional<User> findById(Long id);
 
 }

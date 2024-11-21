@@ -6,19 +6,22 @@
     <title>Регистрация</title>
     <link rel="stylesheet" href="/css/register_styles.css">
 <body>
-    <div id="error-message" class="alert alert-danger d-none" role="alert">
-        Пароли не совпадают. Попробуйте снова.
-    </div>
     
-    <div id="registration-error-message" class="alert alert-danger d-none" role="alert">
-        Ошибка регистрации.
-    </div>
+    
+    
 
     <div class="register-container">
+        
         <button class="back-btn" onclick="goBack()">Назад</button>
         <h1 class="register-title">Регистрация</h1>       
         
         <form class="register-form" method="post" action="/perform_register">
+            <div id="error-message" class="alert alert-danger d-none" role="alert">
+                Пароли не совпадают. Попробуйте снова.
+            </div>
+            <div id="registration-error-message" class="alert alert-danger d-none" role="alert">
+                Ошибка регистрации.
+            </div>
             <label for="username">Имя пользователя</label>
             <input type="text" id="username" name="username" placeholder="name" required>
             
@@ -47,14 +50,15 @@
         (function showError() {
             const params = new URLSearchParams(window.location.search);
             if (params.has('error')){
-                const errorType = param.get('error');
-                if (errorType === 'password_missmatch'){
+                const errorType = params.get('error');
+                if (errorType === 'password_mismatch'){
                     document.getElementById('error-message').classList.remove('d-none');
                 } else if (errorType === 'registration_error'){
                     document.getElementById('registration-error-message').classList.remove('d-none');
                 }
             }
         })();
+
     </script>
 </body>
 </html>
