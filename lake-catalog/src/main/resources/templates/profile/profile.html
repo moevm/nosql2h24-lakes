@@ -15,15 +15,15 @@
         </header>
         
         <div class="profile-info">
-            <img src="../assets/avatar.jpg" alt="Фото пользователя" class="profile-photo">
+            <img src="/assets/avatar.jpg" alt="Фото пользователя" class="profile-photo">
             <div class="user-details">
                 <!-- Поля для отображения имени и email -->
                 <div id="name-field">
-                    <h2 id="user-name">Имя пользователя</h2>
+                    <h2 id="user-name" th:text="${user.nickname}"></h2>
                 </div>
                 <div id="email-field">
-                    <p id="user-email">Email пользователя</p>
-                    <button id="edit-profile" class="icon-button"><img src="../assets/edit.png" alt="Редактировать" class="icon"></button>                    
+                    <p id="user-email" th:text="${user.email}"> </p>
+                    <button id="edit-profile" class="icon-button"><img src="/assets/edit.png" alt="Редактировать" class="icon"></button>                    
                 </div>
             
                 <!-- Поля ввода (скрытые по умолчанию) -->
@@ -38,7 +38,7 @@
             </div>
             
             <div class="profile-dates">
-                <p>Дата создания: 01.01.2001</p>
+                <p> Дата создания: <span th:text="${formattedDate}"> </span></p>
                 <p>Дата редактирования: 01.01.2001</p>
             </div>
             
@@ -73,7 +73,7 @@
                 <div id="reviews-list">
                     <div class="review">
                         <div class="review-user">
-                            <img src="../assets/avatar.jpg" alt="Фото пользователя" class="user-photo">
+                            <img src="/assets/avatar.jpg" alt="Фото пользователя" class="user-photo">
                             <div class="user-info">
                                 <h4>Имя пользователя</h4>
                                 <p>03.03.2003</p>

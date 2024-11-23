@@ -6,6 +6,7 @@ import com.example.lake_catalog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ public class AuthService {
         user.setEmail(email);
         user.setNickname(nickname);
         user.setPassword(password);
+        user.setCreationDate(LocalDate.now());
         userRepository.save(user);
         //setCurrentUser(userService.findUserByEmail(email).get());
     }

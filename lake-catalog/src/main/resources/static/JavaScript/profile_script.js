@@ -1,3 +1,13 @@
+const backButton = document.getElementById("back-button");
+backButton.addEventListener("click", () => {
+    window.location.href = '/main';
+});
+
+const logoutButton = document.getElementById("logout-button");
+logoutButton.addEventListener("click", () => {
+    window.location.href = '/logout';
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');

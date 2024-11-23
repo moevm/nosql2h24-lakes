@@ -78,4 +78,12 @@ public class AuthController {
             return "redirect:/register?error=password_mismatch";
         }
     }
+
+        // Выход из профиля
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // Уничтожение текущей сессии
+        return "redirect:/"; // Перенаправление на главную страницу после выхода
+    }
+
 }
