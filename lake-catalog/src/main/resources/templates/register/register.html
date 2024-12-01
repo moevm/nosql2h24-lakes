@@ -16,12 +16,10 @@
         <h1 class="register-title">Регистрация</h1>       
         
         <form class="register-form" method="post" action="/perform_register">
-            <div id="error-message" class="alert alert-danger d-none" role="alert">
-                Пароли не совпадают. Попробуйте снова.
+            <div id="error-message" class="alert alert-danger" role="alert" th:if="${error}">
+                <span th:text="${error}"></span>
             </div>
-            <div id="registration-error-message" class="alert alert-danger d-none" role="alert">
-                Ошибка регистрации.
-            </div>
+            
             <label for="username">Имя пользователя</label>
             <input type="text" id="username" name="username" placeholder="name" required>
             
@@ -34,8 +32,9 @@
             <label for="confirm">Подтверждение пароля</label>
             <input type="password" id="confirm" name="confirm" placeholder="password" required>
             
-            <button type="submit" class="submit-btn" onclick="goToMain(event)">Зарегистрироваться</button>
+            <button type="submit" class="submit-btn">Зарегистрироваться</button>
         </form>
+        
     </div>
 
     <script>

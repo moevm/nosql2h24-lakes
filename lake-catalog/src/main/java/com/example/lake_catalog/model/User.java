@@ -3,9 +3,11 @@ package com.example.lake_catalog.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Node
 public class User {
@@ -18,6 +20,12 @@ public class User {
     private String photo;
     private LocalDate creationDate;
     private LocalDateTime editDate;
+
+    @Relationship(type = "WANT_VISIT", direction = Relationship.Direction.OUTGOING)
+    private List<Lake> wantVisitLakes;
+
+    @Relationship(type = "VISITED", direction = Relationship.Direction.OUTGOING)
+    private List<Lake> visitedLakes;
 
     public User(){
 
@@ -34,6 +42,23 @@ public class User {
     }
 
     // Геттеры и сеттеры
+    public List<Lake> getWantVisitLakes() {
+        return wantVisitLakes;
+    }
+
+    public void setWantVisitLakes(List<Lake> wantVisitLakes) {
+        this.wantVisitLakes = wantVisitLakes;
+    }
+
+    public List<Lake> getVisitedLakes() {
+        return visitedLakes;
+    }
+
+    public void setVisitedLakes(List<Lake> visitedLakes) {
+        this.visitedLakes = visitedLakes;
+    }
+
+
     public Long getId() {
         return id;
     }

@@ -42,9 +42,9 @@ public class ReviewService {
         review.setStars(rating);
         review.setMessage(text);
         review.setDate(LocalDate.now());
-
+        updateLakeRating(lake);
         return reviewRepository.save(review);
-        //updateLakeRating(lake);
+        
     }
 
     public List<Review> getReviewsForLake(Long lakeId) {
@@ -60,15 +60,19 @@ public class ReviewService {
         return reviews;
     }  
 
+    private void updateLakeRating(Lake lake) {
+        // Получаем все отзывы для озера
+        List<Review> reviews = reviewRepository.findByLakeId(lake.getId());
     
-  
-    // private void updateLakeRating(Lake lake) {
-    //     double averageRating = lake.getReviews().stream()
-    //             .mapToInt(Review::getStars)
-    //             .average()
-    //             .orElse(0);
-
-    //     lake.setRating(averageRating);
-    //     lakeRepository.save(lake);
-    // }
+        // Считаем средний рейтинг
+        double averageRating = reviews.stream()
+                .mapToInt(Review::getStars)
+                .average()
+                .orElse(0.0);
+    
+        // Обновляем рейтинг озера
+        lake.setRating(averageRating);
+        lakeRepository.save(lake);
+    }
+    
 }

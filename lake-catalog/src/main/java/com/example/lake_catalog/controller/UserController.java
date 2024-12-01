@@ -19,6 +19,7 @@ import com.example.lake_catalog.service.*;
 import jakarta.servlet.http.HttpSession;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +50,9 @@ public String getUserProfile(@PathVariable Long userId, Model model) {
         User user = userOptional.get();
         model.addAttribute("user", user);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.forLanguageTag("ru"));
-        String formattedDate = user.getCreationDate().format(formatter);
+        LocalDate creationDate = user.getCreationDate();
+        String formattedDate = (creationDate != null) ? creationDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) : "Дата не указана";
+
         model.addAttribute("formattedDate", formattedDate);
 
         //Lake lakePage = lakeService.getLakePageByUserId(userId); // Например, метод для получения lakePage

@@ -1,9 +1,8 @@
 // LakeController.java
 package com.example.lake_catalog.controller;
 
-import com.example.lake_catalog.model.Lake;
-import com.example.lake_catalog.model.Review;
 import com.example.lake_catalog.service.LakeService;
+import com.example.lake_catalog.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,12 +22,16 @@ import java.util.Optional;
 import com.example.lake_catalog.model.*;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/lakes")
 public class LakeController {
 
     private final LakeService lakeService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public LakeController(LakeService lakeService) {
@@ -78,6 +81,40 @@ public class LakeController {
             return "card/card"; // Имя представления для отображения информации об озере
         } else {
             return "error"; // Если озеро не найдено
+        }
+    }
+
+    @PostMapping("/{lakeId}/action")
+    public ResponseEntity<?> handleLakeAction(@PathVariable Long lakeId, @RequestBody Map<String, String> request, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Вы не авторизованы."));
+        }
+
+        String action = request.get("action");
+        Optional<Lake> optionalLake = lakeService.findLakeById(lakeId);
+
+        if (optionalLake.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Озеро не найдено."));
+        }
+
+        Lake lake = optionalLake.get();
+
+        switch (action) {
+            case "want_visit":
+                userService.addWantVisitLake(currentUser, lake);
+                return ResponseEntity.ok(Map.of("message", "Добавлено в 'Хочу посетить'."));
+            case "remove_want_visit":
+                userService.removeWantVisitLake(currentUser, lake);
+                return ResponseEntity.ok(Map.of("message", "Удалено из 'Хочу посетить'."));
+            case "visited":
+                userService.addVisitedLake(currentUser, lake);
+                return ResponseEntity.ok(Map.of("message", "Добавлено в 'Уже посетил'."));
+            case "remove_visited":
+                userService.removeVisitedLake(currentUser, lake);
+                return ResponseEntity.ok(Map.of("message", "Удалено из 'Уже посетил'."));
+            default:
+                return ResponseEntity.badRequest().body(Map.of("message", "Неизвестное действие."));
         }
     }
 

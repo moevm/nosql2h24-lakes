@@ -37,6 +37,9 @@ public class AuthService {
     public User loginUser(String email, String password){
         System.out.println(email);
         System.out.println(password);
+        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+            throw new RuntimeException("Введите email и пароль.");
+        }
         Optional<User> optionalUser = userService.findUserByEmail(email);
         if (optionalUser.isEmpty())
             throw new RuntimeException("Пользователя с такой почтой не существует!");

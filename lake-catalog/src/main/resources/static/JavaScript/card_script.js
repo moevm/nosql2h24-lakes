@@ -33,18 +33,58 @@ const heartButton = document.getElementById('heart-button');
 const heartIcon = document.getElementById('heart-icon');
 let isHeartFilled = false;
 heartButton.addEventListener('click', () => {
-    isHeartFilled = !isHeartFilled;
-    heartIcon.src = isHeartFilled ? '/assets/heart_filled.png' : '/assets/heart.png';
-    alert(isHeartFilled ? 'Добавлено в "Хочу посетить"' : 'Удалено из "Хочу посетить"');
+    const pathParts = window.location.pathname.split('/');
+    const lakeId = pathParts[pathParts.length - 1]; 
+
+    fetch('/check-auth', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.authenticated) {
+                alert('Вы должны войти в систему, чтобы добавить в "Хочу посетить".');
+                return;
+            }
+
+            isHeartFilled = !isHeartFilled;
+            heartIcon.src = isHeartFilled ? '/assets/heart_filled.png' : '/assets/heart.png';
+            
+            fetch(`/lakes/${lakeId}/action`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: isHeartFilled ? 'want_visit' : 'remove_want_visit' }),
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Ошибка:', error));
+        });
 });
 
 const eyeButton = document.getElementById('eye-button');
 const eyeIcon = document.getElementById('eye-icon');
 let isEyeFilled = false;
 eyeButton.addEventListener('click', () => {
-    isEyeFilled = !isEyeFilled;
-    eyeIcon.src = isEyeFilled ? '/assets/eye_filled.png' : '/assets/eye.png';
-    alert(isEyeFilled ? 'Добавлено в "Уже посетил"' : 'Удалено из "Уже посетил"');
+    const pathParts = window.location.pathname.split('/');
+    const lakeId = pathParts[pathParts.length - 1]; 
+
+    fetch('/check-auth', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.authenticated) {
+                alert('Вы должны войти в систему, чтобы добавить в "Уже посетил".');
+                return;
+            }
+
+            isEyeFilled = !isEyeFilled;
+            eyeIcon.src = isEyeFilled ? '/assets/eye_filled.png' : '/assets/eye.png';
+            
+            fetch(`/lakes/${lakeId}/action`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: isEyeFilled ? 'visited' : 'remove_visited' }),
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Ошибка:', error));
+        });
 });
 
 // Обработчик отправки отзыва
@@ -162,6 +202,12 @@ submitButton.addEventListener('click', () => {
             </div>
         `;
         document.getElementById('reviews-list').appendChild(reviewElement);
+
+        const averageRatingElement = document.getElementById('average-rating');
+        if (averageRatingElement) {
+            averageRatingElement.textContent = lake.rating.toFixed(1); // Обновляем текст рейтинга
+        }
+
         reviewInput.value = '';
         // Сброс активных звезд после публикации отзыва
         starRating.querySelectorAll('span').forEach(span => span.classList.remove('active'));
