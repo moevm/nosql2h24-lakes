@@ -78,15 +78,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     areaInput.addEventListener("input", () => {
-        // Проверка, чтобы значение было в допустимых пределах
-        if (areaInput.value < areaRange.min) {
-            areaInput.value = areaRange.min;
-        } else if (areaInput.value > areaRange.max) {
-            areaInput.value = areaRange.max;
-        }
-        areaRange.value = areaInput.value;
-    });
-
+	let value = parseInt(areaInput.value, 10) || 0; // Преобразуем значение в целое число
+	if (value < areaRange.min) {
+	    value = parseInt(areaRange.min, 10);
+	} else if (value > areaRange.max) {
+	    value = parseInt(areaRange.max, 10);
+	}
+	areaInput.value = value; // Обновляем input
+	areaRange.value = value; // Синхронизируем с range
+    }); 
     // Обработчик кнопки поиска
     // searchButton.addEventListener("click", () => {
     //     const searchQuery = document.getElementById("searchInput").value;
