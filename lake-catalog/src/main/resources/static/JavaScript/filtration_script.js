@@ -62,14 +62,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     depthInput.addEventListener("input", () => {
-        // Проверка, чтобы значение было в допустимых пределах
-        if (depthInput.value < depthRange.min) {
-            depthInput.value = depthRange.min;
-        } else if (depthInput.value > depthRange.max) {
-            depthInput.value = depthRange.max;
-        }
-        depthRange.value = depthInput.value;
-    });
+	let value = parseInt(depthInput.value, 10) || 0; // Преобразуем значение в целое число
+	if (value < depthRange.min) {
+    	    value = parseInt(depthRange.min, 10);
+	} else if (value > depthRange.max) {
+	    value = parseInt(depthRange.max, 10);
+	}
+	depthInput.value = value; // Обновляем input
+	depthRange.value = value; // Синхронизируем с range
+    }); 
 
     // Обработчик для синхронизации значения площади (range и input)
     areaRange.addEventListener("input", () => {
