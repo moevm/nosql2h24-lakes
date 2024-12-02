@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Сохраняем изменения и возвращаем режим просмотра
-    saveProfileButton.addEventListener('click', () => {
+    saveProfileButton.addEventListener('click', async () => {
         const newName = nameInput.value.trim();
         const newEmail = emailInput.value.trim();
 
@@ -53,6 +53,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!newName || !newEmail) {
             alert('Пожалуйста, заполните все поля.');
             return;
+        }
+
+        const currentEmail = document.getElementById('user-email').textContent;
+
+        // Если email не изменился, пропускаем проверку на уникальность
+        if (newEmail === currentEmail) {
+            await updateProfile(newName, newEmail); // Просто обновляем профиль
+        } else {
+            // Проверка уникальности email
+            const emailResponse = await fetch(`/users/profile/${userId}/check-email-unique`, {
+                method: 'POST',
+                body: JSON.stringify({ email: newEmail }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const emailData = await emailResponse.json();
+            if (!emailData.isUnique) {
+                alert('Этот email уже занят.');
+                return;
+            }
+
+            // Отправляем данные на сервер для обновления профиля
+            await updateProfile(newName, newEmail);
         }
 
         // Обновляем значения в режиме просмотра
@@ -68,4 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+async function updateProfile(newName, newEmail) {
+    const pathParts = window.location.pathname.split('/');
+    const userId = pathParts[pathParts.length - 1]; 
+    const updateResponse = await fetch(`/users/profile/${userId}/update-profile?newName=${newName}&newEmail=${newEmail}`, {
+        method: 'PUT',
+    });
 
+    if (updateResponse.ok) {
+        const updateData = await updateResponse.json();
+        alert(updateData.message); // Профиль успешно обновлен
+    } else {
+        const errorData = await updateResponse.json();
+        alert('Ошибка при обновлении профиля: ' + errorData.message);
+    }
+}
