@@ -147,6 +147,7 @@ function createReviewElement(review) {
     return reviewElement;
 }
 
+const ratingElement = document.getElementById('average-rating');
 
 submitButton.addEventListener('click', () => {
     // Проверяем, выбрал ли пользователь количество звезд и написал ли отзыв
@@ -178,9 +179,10 @@ submitButton.addEventListener('click', () => {
         }
         return response.json();
     })
-    .then(review => {
+    .then(data => {
+        const review = data.review;
         console.log(review);
-       
+        console.log(data.lake.rating);
         const reviewElement = document.createElement('div');
         reviewElement.classList.add('review');
         reviewElement.innerHTML = `
@@ -202,12 +204,10 @@ submitButton.addEventListener('click', () => {
             </div>
         `;
         document.getElementById('reviews-list').appendChild(reviewElement);
-
-        const averageRatingElement = document.getElementById('average-rating');
-        if (averageRatingElement) {
-            averageRatingElement.textContent = lake.rating.toFixed(1); // Обновляем текст рейтинга
-        }
-
+        const oldRating = data.lake.rating;
+        const oldCount = document.getElementById('reviews-list').children.length - 1;
+        const newRating = ((oldRating * oldCount) + review.stars) / (oldCount + 1);
+        ratingElement.textContent = newRating.toFixed(2);
         reviewInput.value = '';
         // Сброс активных звезд после публикации отзыва
         starRating.querySelectorAll('span').forEach(span => span.classList.remove('active'));
