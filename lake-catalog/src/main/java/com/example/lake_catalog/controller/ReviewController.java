@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -76,7 +78,10 @@ public class ReviewController {
 
         try {
             Review savedReview = reviewService.addReview(lakeId, user.getId(), review.getMessage(), review.getStars());
-            return ResponseEntity.ok(savedReview);
+            Map<String, Object> response = new HashMap<>();
+            response.put("review", savedReview);  // Добавляем отзыв в ответ
+            response.put("lake", lake.get());
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // Ответ 400 в случае ошибки
         }
