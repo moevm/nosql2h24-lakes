@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('Ошибка:', error);
         });
+        
 });
 
 // Функция для создания элемента отзыва
@@ -262,3 +263,5 @@ starRating.addEventListener('mouseout', () => {
         }
     });
 });
+
+

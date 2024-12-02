@@ -91,6 +91,22 @@ document.addEventListener('DOMContentLoaded', () => {
         saveProfileButton.style.display = 'none';
         editProfileButton.style.display = 'inline-block'; // Вернуть кнопку редактирования
     });
+    
+    // Изменение фото профиля
+    changePhotoButton.addEventListener('click', () => {
+        uploadPhotoInput.click();
+    });
+
+    uploadPhotoInput.addEventListener('change', () => {
+        const file = uploadPhotoInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+	        profilePhoto.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 });
 
 async function updateProfile(newName, newEmail) {
