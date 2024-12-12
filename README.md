@@ -16,3 +16,11 @@
 <a href=" ./../../../actions/workflows/6_report.yml" >![6. Пояснительная записка]( ./../../actions/workflows/6_report.yml/badge.svg)</a>
 
 <a href=" ./../../../actions/workflows/7_app_is_ready.yml" >![7. App is ready]( ./../../actions/workflows/7_app_is_ready.yml/badge.svg)</a>
+
+# Входные данные пользователей
+## Пользователь 1
+Логин: oksana@gmail.com
+Пароль: oksana
+## Пользователь 2
+Логин: alina@gmail.com
+Пароль: 124
