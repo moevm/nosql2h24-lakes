@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профиль пользователя</title>
+<link rel="stylesheet" href="/css/profile_styles.css">
+</head>
+<body>
+    <div class="profile-container">
+        <header>
+            <button id="back-button">На главную</button>
+            <h1>Профиль</h1>
+            <button id="logout-button">Выйти из профиля</button>
+        </header>
+        
+        <div class="profile-info">
+            <div class="profile-photo-container">
+                <img th:src="${user.photo}" alt="Фото пользователя" class="profile-photo" id="profile-photo">
+                <!-- <input type="file" id="upload-photo" accept="image/*" style="display: none;">
+                <button id="change-photo-button">Изменить фото</button> -->
+            </div>
+            <div class="user-details">
+                <!-- Поля для отображения имени и email -->
+                <div id="name-field">
+                    <h2 id="user-name" th:text="${user.nickname}"></h2>
+                </div>
+                <div id="email-field">
+                    <p id="user-email" th:text="${user.email}"> </p>
+                    <button id="edit-profile" class="icon-button"><img src="/assets/edit.png" alt="Редактировать" class="icon"></button>                    
+                </div>
+            
+                <!-- Поля ввода (скрытые по умолчанию) -->
+                <input id="name-input" type="text" placeholder="Введите имя" style="display: none;">
+                <input id="email-input" type="email" placeholder="Введите email" style="display: none;"> 
+            
+                <!-- Кнопки -->
+                
+                <button id="save-profile" style="display: none;">
+                    Сохранить
+                </button>
+            </div>
+            
+            <div class="profile-dates">
+                <p> Дата создания: <span th:text="${formattedDate}"> </span></p>
+                <p>Дата редактирования: <span id="edit-date" th:text="${formatted_editDate}"> </span></p>
+            </div>
+            
+        </div>
+        <button id="import-export-button">Импорт/Экспорт</button>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="to-visit">Хочу посетить</button>
+            <button class="tab-button" data-tab="visited">Уже посетил</button>
+            <button class="tab-button" data-tab="reviews">Отзывы</button>
+        </div>
+
+        <div class="tab-content active" id="to-visit">
+            <div class="lake-grid">
+                <th:block th:each="lake : ${wantVisitLakes}">
+                    <a th:href="@{/lakes/lake_page/{id}(id=${lake.id})}" class="lake-card">
+                        <img th:src="${lake.primaryPhoto}" th:alt="${lake.name}" class="lake-image">
+                        <p class="lake-title" th:text="${lake.name}">Название озера</p>
+                    </a>
+                </th:block>
+            </div>
+        </div>
+        
+
+        <div class="tab-content" id="visited">
+            <div class="lake-grid">
+                <th:block th:each="lake : ${visitedLakes}">
+                    <a th:href="@{/lakes/lake_page/{id}(id=${lake.id})}" class="lake-card">
+                        <img th:src="${lake.primaryPhoto}" th:alt="${lake.name}" class="lake-image">
+                        <p class="lake-title" th:text="${lake.name}">Название озера</p>
+                    </a>
+                </th:block>
+            </div>
+        </div>
+        
+
+        <div class="tab-content" id="reviews">
+            <section class="reviews">
+                <div id="reviews-list">
+                    <div class="review">
+                        <div class="review-user">
+                            <img src="/assets/avatar.jpg" alt="Фото пользователя" class="user-photo">
+                            <div class="user-info">
+                                <h4>Имя пользователя</h4>
+                                <p>03.03.2003</p>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            <div class="review-rating">
+                                <span>★★★★★</span>
+                            </div>
+                            <div class="review-text">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+        </div>
+    </div>
+
+    <script src="/JavaScript/profile_script.js"></script>
+</body>
+</html>

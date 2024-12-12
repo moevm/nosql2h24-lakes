@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фильтрация озер</title>
+    <link rel="stylesheet" href="/css/filtration_styles.css">
+     <!-- <link rel="stylesheet" href="./filtration_styles.css"> -->
+</head>
+<body>
+    <header>
+        <h1>Поиск</h1>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Поиск">
+            <button id="searchButton">Поиск</button>
+            <button id="returnButton">Отмена</button>
+        </div>
+
+        <section class="filters">
+            <div class="filter-group">
+                <label>Регион</label>
+                <div id="regionDropdown" class="dropdown">
+                    <!-- <div class="input-wrapper"> -->
+                    <input type="text" id="regionInput" placeholder="Выберите регион" readonly>
+                    <img class="downArrow" src="../assets/down.png" alt="Arrow">
+                    <!-- </div>                     -->
+                    <div class="dropdown-content" id="regionList">
+                        <input type="text" id="regionSearch" placeholder="Поиск региона...">
+                        <div class="checkbox-container" id = "region_list">
+                            <label><input type="checkbox" value="Приозерский район"> Приозерский район</label>
+                            <label><input type="checkbox" value="Ленинградская область"> Ленинградская область</label>
+                            <label><input type="checkbox" value="Выборгский район"> Выборгский район</label>
+                            <label><input type="checkbox" value="Всеволожский район"> Всеволожский район</label>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label>Город</label>
+                <div id="cityDropdown" class="dropdown">
+                    <input type="text" id="cityInput" placeholder="Выберите город" readonly>
+                    <img class="downArrow" src="../assets/down.png" alt="Arrow">
+                    <div class="dropdown-content" id="cityList">
+                        <input type="text" id="citySearch" placeholder="Поиск города...">
+                        <div class="checkbox-container" id="city_list">
+                            <label><input type="checkbox" value="пос. Громово"> пос. Громово</label>
+                            <label><input type="checkbox" value="п. Грибное"> п. Грибное</label>
+                            <label><input type="checkbox" value="п. Солнечное"> п. Солнечное</label>
+                            <label><input type="checkbox" value="с. Юкковское"> с. Юкковское</label>
+                            <label><input type="checkbox" value="д. Красное"> д. Красное</label>
+                            <label><input type="checkbox" value="с. Сосновское"> с. Сосновское</label>
+                            <label><input type="checkbox" value="Приозерск"> Приозерск</label>
+                            <label><input type="checkbox" value="пос. Зеркальный"> пос. Зеркальный</label>
+                            <label><input type="checkbox" value="Зеленогорск"> Зеленогорск</label>
+                            <label><input type="checkbox" value="п. Токсово"> п. Токсово</label>
+                            <label><input type="checkbox" value="п. Красная долина"> п. Красная долина</label>
+                            <label><input type="checkbox" value="с. Красносельское"> с. Красносельское</label>
+                            <label><input type="checkbox" value="п. Поляны"> п. Поляны</label>
+                            <label><input type="checkbox" value="д. Малое Раковно"> д. Малое Раковно</label>
+                            <label><input type="checkbox" value="Подлесье"> Подлесье</label>
+                            <label><input type="checkbox" value="п. Каменное"> п. Каменное</label>
+                            <label><input type="checkbox" value="с. Колтушское"> с. Колтушское</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Рейтинг</label>
+                <div class="rating">
+                    <input type="checkbox" id="withoutRating">
+                    <label for="withoutRating" class="star">Без рейтинга</label><br>
+                    <input type="checkbox" id="rating1">
+                    <label for="rating1" class="star">★</label><br>
+            
+                    <input type="checkbox" id="rating2">
+                    <label for="rating2" class="star">★★</label><br>
+            
+                    <input type="checkbox" id="rating3">
+                    <label for="rating3" class="star">★★★</label><br>
+            
+                    <input type="checkbox" id="rating4">
+                    <label for="rating4" class="star">★★★★</label><br>
+            
+                    <input type="checkbox" id="rating5">
+                    <label for="rating5" class="star">★★★★★</label>
+
+                    
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <iframe
+                    width="300"
+                    height="200"
+                    frameborder="0"
+                    scrolling="no"
+                    marginheight="0"
+                    marginwidth="0"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=144.94183349609375%2C-37.82399863223261%2C144.9654083251953%2C-37.80653651066212&layer=mapnik&marker=-37.815766%2C144.953612"
+                    style="border: 1px solid #003366">
+                </iframe>
+            </div>
+
+            <div class="filter-group">
+                <label>Глубина озера (м):</label>
+                <input type="number" id="depthInput" min="0" max="100" step="1">
+                <div class="range-container">
+                    <span>0</span>
+                    <input type="range" id="depthRange" min="0" max="100">
+                    <span>100</span>                    
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Площадь озера (км²):</label>
+                <input type="number" id="areaInput" min="0" max="1000" step="1">
+                <div class="range-container">
+                    <span>0</span>
+                    <input type="range" id="areaRange" min="0" max="1000">
+                    <span>1000</span>
+                </div>
+            </div>
+
+            <!-- <button id="applyFilters">Применить фильтры</button> -->
+        </section>
+    </main>
+
+    <script src="/JavaScript/filtration_script.js">
+            function goToMain(){
+                window.location.href = '/main';
+            }
+    </script>
+</body>
+</html>

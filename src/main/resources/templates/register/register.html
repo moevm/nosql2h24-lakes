@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="/css/register_styles.css">
+<body>
+    
+    
+    
+
+    <div class="register-container">
+        
+        <button class="back-btn" onclick="goBack()">Назад</button>
+        <h1 class="register-title">Регистрация</h1>       
+        
+        <form class="register-form" method="post" action="/perform_register">
+            <div id="error-message" class="alert alert-danger" role="alert" th:if="${error}">
+                <span th:text="${error}"></span>
+            </div>
+            
+            <label for="username">Имя пользователя</label>
+            <input type="text" id="username" name="username" placeholder="name" required>
+            
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="email@email.com" required>
+            
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" placeholder="password" required>
+            
+            <label for="confirm">Подтверждение пароля</label>
+            <input type="password" id="confirm" name="confirm" placeholder="password" required>
+            
+            <button type="submit" class="submit-btn">Зарегистрироваться</button>
+        </form>
+        
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = '/';
+        }
+        function goToMain(){
+            window.location.href = '/main';
+        }
+
+        // Проверка параметра error в URL и отображение сообщения об ошибке
+        (function showError() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('error')){
+                const errorType = params.get('error');
+                if (errorType === 'password_mismatch'){
+                    document.getElementById('error-message').classList.remove('d-none');
+                } else if (errorType === 'registration_error'){
+                    document.getElementById('registration-error-message').classList.remove('d-none');
+                }
+            }
+        })();
+
+    </script>
+</body>
+</html>

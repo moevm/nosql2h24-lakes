@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экспорт/Импорт</title>
+    <link rel="stylesheet" href="/css/import-export_styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button id="back-button" class="back-button" onclick="goToProfile()">Назад</button>
+            <h1>Экспорт/Импорт</h1>
+            <button id="profile-btn" onclick="goToProfile()"><img src="../assets/avatar.jpg" alt="Профиль" class="avatar"></button>
+        </header>
+
+        <div class="export-import-container">
+            <div class="export-section">
+                <h2>Экспорт</h2>
+                <p>Хотите скачать всю базу озер?</p>
+                <button id="export-button">Скачать</button>
+            </div>
+            <div class="import-section">
+                <h2>Импорт</h2>
+                <p>Хотите добавить новое озеро в общую базу?</p>
+                <div class="file-upload">
+                    <input type="file" id="file-upload" />
+                    <label for="file-upload" class="custom-file-upload">Выбрать файл</label>
+                    <button id="upload-button">Загрузить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/JavaScript/import-export_script.js"></script>
+</body>
+</html>

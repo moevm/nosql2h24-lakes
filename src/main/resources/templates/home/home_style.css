@@ -1,0 +1,66 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Century Gothic', Arial, sans-serif; /* Указание шрифта Century Gothic */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #e6f0ff;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.title {
+    font-size: 4rem; 
+    color: #003366; 
+    margin-bottom: 50px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn {
+    width: 350px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    /* border-radius: 4px; */
+    border: none;
+    transition: background-color 0.3s;
+    font-family: 'Century Gothic', Arial, sans-serif; /* Указываем шрифт для кнопок */
+}
+
+
+.primary-btn {
+    background-color: #003366;
+    color: #ffffff;
+}
+
+.primary-btn:hover {
+    background-color: #002244;
+}
+
+.secondary-btn {
+    background-color: #e6f0ff;
+    color: #003366;
+    border: 2px solid #003366;
+    margin-top: 40px;
+}
+
+.secondary-btn:hover {
+    background-color: #f0f8ff;
+}
