@@ -26,9 +26,6 @@ services:
       NEO4J_AUTH: neo4j/neo4jneo4j
     volumes:
       - db_data:/data 
-    ports:
-      - '127.0.0.1:7474:7474'
-      - '127.0.0.1:7687:7687'
     healthcheck:
       test: ["CMD-SHELL", "cypher-shell -u neo4j -p neo4jneo4j 'RETURN 1' || exit 1"]
       interval: 10s
