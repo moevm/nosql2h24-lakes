@@ -16,14 +16,14 @@ public class Lake {
     private String name;
     private String region;
     private String city;
-    private double rating;
-    private double depth;
-    private double square;
+    private Double rating;
+    private Double depth;
+    private Double square;
     private List<String> photos;
     private String description;
 
     // Конструктор
-    public Lake(Long id, String name, String region, String city, double rating, double depth, double square, List<String> photos, String description) {
+    public Lake(Long id, String name, String region, String city, Double rating, Double depth, Double square, List<String> photos, String description) {
         this.id = id;
         this.name = name;
         this.region = region;
@@ -31,7 +31,7 @@ public class Lake {
         this.rating = rating;
         this.depth = depth;
         this.square = square;
-        this.photos = new ArrayList<>();
+        this.photos = photos != null ? photos : new ArrayList<>();
         this.description = description;
     }
 
@@ -49,7 +49,7 @@ public class Lake {
     }
 
     public String getPrimaryPhoto() {
-        return (photos != null && !photos.isEmpty()) ? photos.get(0) : "/assets/lake.jpg";
+        return (photos != null && !photos.isEmpty()) ? photos.get(0) : "https://avatars.mds.yandex.net/i?id=5b8ada33bb7301c22680812d7cd9feab_l-11548596-images-thumbs&n=13";
     }
     
 
@@ -77,27 +77,27 @@ public class Lake {
         this.city = city;
     }
 
-    public double getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
-    public double getDepth() {
+    public Double getDepth() {
         return depth;
     }
 
-    public void setDepth(double depth) {
+    public void setDepth(Double depth) {
         this.depth = depth;
     }
 
-    public double getSquare() {
+    public Double getSquare() {
         return square;
     }
 
-    public void setSquare(double square) {
+    public void setSquare(Double square) {
         this.square = square;
     }
 

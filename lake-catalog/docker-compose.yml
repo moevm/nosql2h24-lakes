@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '127.0.0.1:8080:8080' 
+    depends_on:
+      db:
+        condition: service_healthy 
+    environment:
+      SPRING_APPLICATION_NAME: lake-catalog
+      SPRING_NEO4J_URI: ${SPRING_NEO4J_URI}
+      SPRING_NEO4J_AUTHENTICATION_USERNAME: ${SPRING_NEO4J_AUTHENTICATION_USERNAME}
+      SPRING_NEO4J_AUTHENTICATION_PASSWORD: ${SPRING_NEO4J_AUTHENTICATION_PASSWORD}
+    volumes:
+      - app_data:/app/data
+    networks:
+      - app-network
+
+  db:
+    image: neo4j:5.7.0
+    environment:
+      NEO4J_AUTH: neo4j/neo4jneo4j
+    volumes:
+      - db_data:/data 
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p neo4jneo4j 'RETURN 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  db_data: 
+  app_data:
+
+networks:
+  app-network:

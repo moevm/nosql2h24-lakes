@@ -8,6 +8,12 @@ logoutButton.addEventListener("click", () => {
     window.location.href = '/logout';
 });
 
+const imp_expButton = document.getElementById("import-export-button");
+imp_expButton.addEventListener("click", () => {
+    window.location.href = '/users/imp_exp';
+});
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -91,22 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveProfileButton.style.display = 'none';
         editProfileButton.style.display = 'inline-block'; // Вернуть кнопку редактирования
     });
-    
-    // Изменение фото профиля
-    changePhotoButton.addEventListener('click', () => {
-        uploadPhotoInput.click();
-    });
-
-    uploadPhotoInput.addEventListener('change', () => {
-        const file = uploadPhotoInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-	        profilePhoto.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
 });
 
 async function updateProfile(newName, newEmail) {
@@ -119,6 +109,17 @@ async function updateProfile(newName, newEmail) {
     if (updateResponse.ok) {
         const updateData = await updateResponse.json();
         alert(updateData.message); // Профиль успешно обновлен
+        if (updateData.editDate) {
+            const editDateElement = document.getElementById('edit-date');
+            const date = new Date(updateData.editDate);
+
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+            const year = date.getFullYear();
+
+            const formattedDate = `${day}-${month}-${year}`;
+            editDateElement.textContent = formattedDate;
+        }
     } else {
         const errorData = await updateResponse.json();
         alert('Ошибка при обновлении профиля: ' + errorData.message);

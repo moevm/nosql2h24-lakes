@@ -42,8 +42,9 @@ public class ReviewService {
         review.setStars(rating);
         review.setMessage(text);
         review.setDate(LocalDate.now());
+        Review save_review = reviewRepository.save(review);
         updateLakeRating(lake);
-        return reviewRepository.save(review);
+        return save_review;
         
     }
 
@@ -65,7 +66,7 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.findByLakeId(lake.getId());
     
         // Считаем средний рейтинг
-        double averageRating = reviews.stream()
+        Double averageRating = reviews.stream()
                 .mapToInt(Review::getStars)
                 .average()
                 .orElse(0.0);

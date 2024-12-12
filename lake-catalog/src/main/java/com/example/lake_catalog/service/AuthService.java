@@ -29,6 +29,7 @@ public class AuthService {
         user.setEmail(email);
         user.setNickname(nickname);
         user.setPassword(password);
+        user.setPhoto("https://gimnaziya23saransk-r13.gosweb.gosuslugi.ru/netcat_files/8/168/1663871865_44_top_fon_com_p_serii_fon_tik_tok_foto_50.jpg");
         user.setCreationDate(LocalDate.now());
         userRepository.save(user);
         //setCurrentUser(userService.findUserByEmail(email).get());

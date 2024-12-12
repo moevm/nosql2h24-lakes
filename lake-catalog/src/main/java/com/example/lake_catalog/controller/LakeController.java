@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
 import com.example.lake_catalog.model.*;
+import com.example.lake_catalog.repository.LakeRepository;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -34,50 +36,72 @@ public class LakeController {
     private UserService userService;
 
     @Autowired
+    private LakeRepository lakeRepository;
+
+    @Autowired
     public LakeController(LakeService lakeService) {
         this.lakeService = lakeService;
     }
 
     @GetMapping("/main")
-    public String showMainPage(Model model, 
-                               @RequestParam(defaultValue = "0") int page,  // Параметр для текущей страницы пагинации
-                               @RequestParam(required = false) String name) { // Параметр для поискового запроса
+    public String showMainPage(Model model,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(required = false) String name,
+                               @RequestParam(required = false) String depth,
+                               @RequestParam(required = false) String square,
+                               @RequestParam(required = false) String city,
+                               @RequestParam(required = false) String region,
+                               @RequestParam(required = false) String rating,
+                               HttpSession session) {
+        int pageSize = 8; // Количество озер на одной странице
 
-        int pageSize = 8; // Количество озёр на странице
-        Page<Lake> lakePage;
+        // Вызываем метод фильтрации
+        Page<Lake> lakePage = lakeService.filterLakes(name, depth, square, city, region, rating, page, pageSize);
 
-        // Если есть строка поиска, то ищем озера по имени с пагинацией
-        if (name != null && !name.isEmpty()) {
-            lakePage = lakeService.findLakesByNameWithPagination(name, page, pageSize);
-        } else {
-            lakePage = lakeService.findLakesWithPagination(page, pageSize);  // Если нет поискового запроса, показываем все озера
-        }
-
-        // Получаем количество страниц для пагинации
+        // Параметры пагинации
         int totalPages = lakePage.getTotalPages();
-        // Отображение страниц пагинации
         int startPage = Math.max(0, page - 1);
         int endPage = Math.min(totalPages - 1, page + 1);
-
-        // Передаем данные в модель для отображения
-        model.addAttribute("lakePage", lakePage);  // Результаты поиска или все озера
-        model.addAttribute("currentPage", page);  // Текущая страница
-        model.addAttribute("totalPages", totalPages);  // Общее количество страниц
-        model.addAttribute("startPage", startPage);  // Начальная страница для пагинации
-        model.addAttribute("endPage", endPage);  // Конечная страница для пагинации
-        model.addAttribute("name", name);  // Строка поиска для отображения в поле поиска
-
-        return "main/main";  // Возвращаем имя представления
+        User currentUser = (User) session.getAttribute("currentUser");
+        if(currentUser!=null){
+            model.addAttribute("userPhoto", currentUser.getPhoto());
+        } else {
+            model.addAttribute("userPhoto", "https://www.hydropower.ru/en/auth/inside.png");
+        }
+        // Передаем данные в модель
+        model.addAttribute("lakePage", lakePage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("name", name);
+        model.addAttribute("depth", depth);
+        model.addAttribute("square", square);
+        model.addAttribute("city", city);
+        model.addAttribute("region", region);
+        model.addAttribute("rating", rating);
+        return "main/main"; // Возвращаем имя представления
     }
     
     @GetMapping("/lake_page/{id}")
-    public String showLakeDetails(@PathVariable("id") Long id, Model model) {
+    public String showLakeDetails(@PathVariable("id") Long id, Model model, HttpSession session) {
         // Загружаем озеро по id
         Optional<Lake> lakeOptional = lakeService.findLakeById(id);
         
         if (lakeOptional.isPresent()) {
             Lake lake = lakeOptional.get();
             model.addAttribute("lake", lake);
+            User currentUser = (User) session.getAttribute("currentUser");
+
+            boolean isInWantVisit = false;
+            boolean isInVisited = false;
+            if (currentUser != null) {
+                isInWantVisit = userService.isLakeInWantVisit(currentUser.getId(), lake.getId());
+                isInVisited = userService.isLakeInVisited(currentUser.getId(), lake.getId());
+            }
+            model.addAttribute("isInWantVisit", isInWantVisit);
+            model.addAttribute("isInVisited", isInVisited);
+
             return "card/card"; // Имя представления для отображения информации об озере
         } else {
             return "error"; // Если озеро не найдено
@@ -105,23 +129,66 @@ public class LakeController {
                 userService.addWantVisitLake(currentUser, lake);
                 return ResponseEntity.ok(Map.of("message", "Добавлено в 'Хочу посетить'."));
             case "remove_want_visit":
-                userService.removeWantVisitLake(currentUser, lake);
+                userService.removeWantVisitLake(currentUser.getId(), lake.getId());
                 return ResponseEntity.ok(Map.of("message", "Удалено из 'Хочу посетить'."));
             case "visited":
                 userService.addVisitedLake(currentUser, lake);
                 return ResponseEntity.ok(Map.of("message", "Добавлено в 'Уже посетил'."));
             case "remove_visited":
-                userService.removeVisitedLake(currentUser, lake);
+                userService.removeVisitedLake(currentUser.getId(), lake.getId());
                 return ResponseEntity.ok(Map.of("message", "Удалено из 'Уже посетил'."));
             default:
                 return ResponseEntity.badRequest().body(Map.of("message", "Неизвестное действие."));
         }
     }
 
+    @GetMapping("/{lakeId}/status")
+    public ResponseEntity<Map<String, Boolean>> getLakeStatus(@PathVariable Long lakeId, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            // Пользователь не авторизован, возвращаем ответ с сообщением в виде Map<String, Boolean>
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("isWantVisit", false, "isVisited", false));
+        }
+
+        Optional<Lake> optionalLake = lakeService.findLakeById(lakeId);
+        if (optionalLake.isEmpty()) {
+            // Озеро не найдено, возвращаем ответ с сообщением в виде Map<String, Boolean>
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("isWantVisit", false, "isVisited", false));
+        }
+
+        Lake lake = optionalLake.get();
+        boolean isInWantVisit = userService.isLakeInWantVisit(currentUser.getId(), lake.getId());
+        boolean isInVisited = userService.isLakeInVisited(currentUser.getId(), lake.getId());
+
+        // Возвращаем информацию о статусе озера в виде Map<String, Boolean>
+        return ResponseEntity.ok(Map.of(
+            "isWantVisit", isInWantVisit,
+            "isVisited", isInVisited
+        ));
+    }
+
+
 
     @GetMapping()
     public List<Lake> getAllLakes() {
         return lakeService.findAll();
     }
-   
+
+    @GetMapping("/initialize")
+    public ResponseEntity<Void> initialize() {
+        lakeService.initialize();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/lakes")).build();
+    }
+
+    @GetMapping("/regions")
+    public List<String> getAllRegions() {
+        return lakeRepository.findAllRegions();
+    }
+
+    // Получение всех городов для выпадающего списка
+    @GetMapping("/cities")
+    public List<String> getAllCities() {
+        return lakeRepository.findAllCities();
+    }
 }

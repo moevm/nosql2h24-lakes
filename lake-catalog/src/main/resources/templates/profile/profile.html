@@ -15,10 +15,10 @@
         </header>
         
         <div class="profile-info">
-	    <div class="profile-photo-container">
-                <img src="../assets/avatar.jpg" alt="Фото пользователя" class="profile-photo" id="profile-photo">
-                <input type="file" id="upload-photo" accept="image/*" style="display: none;">
-                <button id="change-photo-button">Изменить фото</button>
+            <div class="profile-photo-container">
+                <img th:src="${user.photo}" alt="Фото пользователя" class="profile-photo" id="profile-photo">
+                <!-- <input type="file" id="upload-photo" accept="image/*" style="display: none;">
+                <button id="change-photo-button">Изменить фото</button> -->
             </div>
             <div class="user-details">
                 <!-- Поля для отображения имени и email -->
@@ -43,7 +43,7 @@
             
             <div class="profile-dates">
                 <p> Дата создания: <span th:text="${formattedDate}"> </span></p>
-                <p>Дата редактирования: 01.01.2001</p>
+                <p>Дата редактирования: <span id="edit-date" th:text="${formatted_editDate}"> </span></p>
             </div>
             
         </div>
@@ -55,22 +55,29 @@
             <button class="tab-button" data-tab="reviews">Отзывы</button>
         </div>
 
-        <!-- <div class="tab-content active" id="to-visit">
+        <div class="tab-content active" id="to-visit">
             <div class="lake-grid">
-                
-                <th:block th:each="lake : ${lakePage.content}">
+                <th:block th:each="lake : ${wantVisitLakes}">
                     <a th:href="@{/lakes/lake_page/{id}(id=${lake.id})}" class="lake-card">
                         <img th:src="${lake.primaryPhoto}" th:alt="${lake.name}" class="lake-image">
                         <p class="lake-title" th:text="${lake.name}">Название озера</p>
                     </a>
                 </th:block>
             </div>
-        </div> -->
+        </div>
+        
 
         <div class="tab-content" id="visited">
-            <div class="lake-card">Ладожское озеро</div>
-            <div class="lake-card">Селигер</div>
+            <div class="lake-grid">
+                <th:block th:each="lake : ${visitedLakes}">
+                    <a th:href="@{/lakes/lake_page/{id}(id=${lake.id})}" class="lake-card">
+                        <img th:src="${lake.primaryPhoto}" th:alt="${lake.name}" class="lake-image">
+                        <p class="lake-title" th:text="${lake.name}">Название озера</p>
+                    </a>
+                </th:block>
+            </div>
         </div>
+        
 
         <div class="tab-content" id="reviews">
             <section class="reviews">

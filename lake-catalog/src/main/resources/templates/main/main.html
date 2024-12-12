@@ -10,7 +10,7 @@
     <header class="header">
         <h1 class="logo">LakeView</h1>
         <button class="profile-btn" onclick="goToProfile()">
-            <img src="../assets/avatar.jpg" alt="Профиль" class="profile-img">
+            <img th:src="${userPhoto}" alt="Профиль" class="profile-img">
         </button>
     </header>
 
@@ -23,12 +23,12 @@
             </form>
             <button class="filter-btn" onclick="goFilter()">Фильтры</button>
         </div>
-        <input type="text" placeholder="Поиск по карте" class="map-search">
+        <!-- <input type="text" placeholder="Поиск по карте" class="map-search"> -->
     </div>
 
 
     <div class="main-content">
-        <button class="stats-btn">Статистика</button>
+        <!-- <button class="stats-btn">Статистика</button> -->
 
         <!-- Результаты поиска и озёра -->
         <div class="lake-grid">
@@ -45,20 +45,21 @@
         <!-- Пагинация -->
         <div class="pagination">
             <!-- Кнопка "Назад" -->
-            <a th:href="@{/lakes/main(page=${currentPage - 1}, name=${name})}"
-               th:if="${!lakePage.first}" class="page-link">Назад</a>
+            <a th:href="@{/lakes/main(page=${currentPage - 1}, name=${name}, depth=${depth}, square=${square}, city=${city}, region=${region}, rating=${rating})}"
+            th:if="${!lakePage.first}" class="page-link">Назад</a>
 
             <!-- Отображение номеров страниц -->
             <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                <a th:href="@{/lakes/main(page=${i}, name=${name})}"
-                   th:text="${i + 1}"
-                   th:class="${i == currentPage ? 'page-link active' : 'page-link'}"></a>
+                <a th:href="@{/lakes/main(page=${i}, name=${name}, depth=${depth}, square=${square}, city=${city}, region=${region}, rating=${rating})}"
+                th:text="${i + 1}"
+                th:class="${i == currentPage ? 'page-link active' : 'page-link'}"></a>
             </th:block>
 
             <!-- Кнопка "Вперед" -->
-            <a th:href="@{/lakes/main(page=${currentPage + 1}, name=${name})}"
-               th:if="${!lakePage.last}" class="page-link">Вперед</a>
+            <a th:href="@{/lakes/main(page=${currentPage + 1}, name=${name}, depth=${depth}, square=${square}, city=${city}, region=${region}, rating=${rating})}"
+            th:if="${!lakePage.last}" class="page-link">Вперед</a>
         </div>
+
     </div>
 
     <script src="/JavaScript/main_script.js"></script>

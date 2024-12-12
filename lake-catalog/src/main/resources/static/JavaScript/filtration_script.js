@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     const searchButton = document.getElementById("searchButton");
     const returnButton = document.getElementById("returnButton");
@@ -62,15 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     depthInput.addEventListener("input", () => {
-	let value = parseInt(depthInput.value, 10) || 0; // Преобразуем значение в целое число
-	if (value < depthRange.min) {
-    	    value = parseInt(depthRange.min, 10);
-	} else if (value > depthRange.max) {
-	    value = parseInt(depthRange.max, 10);
-	}
-	depthInput.value = value; // Обновляем input
-	depthRange.value = value; // Синхронизируем с range
-    }); 
+        // Проверка, чтобы значение было в допустимых пределах
+        if (depthInput.value < depthRange.min) {
+            depthInput.value = depthRange.min;
+        } else if (depthInput.value > depthRange.max) {
+            depthInput.value = depthRange.max;
+        }
+        depthRange.value = depthInput.value;
+    });
 
     // Обработчик для синхронизации значения площади (range и input)
     areaRange.addEventListener("input", () => {
@@ -78,15 +78,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     areaInput.addEventListener("input", () => {
-	let value = parseInt(areaInput.value, 10) || 0; // Преобразуем значение в целое число
-	if (value < areaRange.min) {
-	    value = parseInt(areaRange.min, 10);
-	} else if (value > areaRange.max) {
-	    value = parseInt(areaRange.max, 10);
-	}
-	areaInput.value = value; // Обновляем input
-	areaRange.value = value; // Синхронизируем с range
-    }); 
+        // Проверка, чтобы значение было в допустимых пределах
+        if (areaInput.value < areaRange.min) {
+            areaInput.value = areaRange.min;
+        } else if (areaInput.value > areaRange.max) {
+            areaInput.value = areaRange.max;
+        }
+        areaRange.value = areaInput.value;
+    });
+
     // Обработчик кнопки поиска
     // searchButton.addEventListener("click", () => {
     //     const searchQuery = document.getElementById("searchInput").value;
@@ -95,13 +95,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Обработчик кнопки применения фильтров
     searchButton.addEventListener("click", () => {
-        const region = document.getElementById("regionSelect").value;
-        const city = document.getElementById("citySelect").value;
-        const depth = depthRange.value;
-        const area = areaRange.value;
+        const form = document.createElement('form');
+        form.method = "GET";
+        form.action = "/lakes/main";
 
-        alert(`Фильтры применены:\nРегион: ${region}\nГород: ${city}\nГлубина: ${depth} м\nПлощадь: ${area} км²`);
+        const addInput = (name, value) => {
+            if (value) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                form.appendChild(input);
+            }
+        };
+
+        addInput('depth', document.getElementById('depthInput').value || document.getElementById('depthRange').value);
+        addInput('region', Array.from(document.querySelectorAll('#regionList input:checked')).map(input => input.value).join(','));
+        addInput('square', document.getElementById('areaInput').value || document.getElementById('areaRange').value);
+        addInput('rating', Array.from(document.querySelectorAll('.rating input:checked')).map(input => input.id).join(','));
+        addInput('city', Array.from(document.querySelectorAll('#cityList input:checked')).map(input => input.value).join(','));
+        addInput('name', document.getElementById('searchInput').value.trim());
+
+        document.body.appendChild(form);
+        form.submit();
     });
+
     returnButton.addEventListener("click", () => {
         window.location.href = '/main';
     });

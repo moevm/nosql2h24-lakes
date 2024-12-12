@@ -112,11 +112,39 @@ header {
     display: block;
 }
 
+.lake-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Автоматическая адаптация */
+    gap: 15px;
+    justify-items: center; /* Центрирование карточек */
+}
+
 .lake-card {
     padding: 10px;
     background-color: #cce5ff;
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 200px;
+    border-radius: 8px;
 }
+
+.lake-image {
+    width: 100%; 
+    height: 150px; 
+    object-fit: cover; 
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.lake-title {
+    font-size: 16px;
+    text-align: center;
+    color: #003366;
+    font-weight: bold;
+}
+
 
 /* Стили для отзыва */
 .review {
@@ -232,24 +260,4 @@ header {
 
 button:hover {
     opacity: 0.9;
-}
-
-.profile-photo-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-#change-photo-button {
-    padding: 8px 16px;
-    background-color: #003366;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-#change-photo-button:hover {
-    background-color: #002244;
 }

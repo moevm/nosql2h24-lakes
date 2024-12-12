@@ -58,6 +58,15 @@ public class User {
         this.visitedLakes = visitedLakes;
     }
 
+    public boolean isLakeInWantVisit(User user, Lake lake) {
+        return user.getWantVisitLakes().contains(lake);
+    }
+    
+    public boolean isLakeInVisited(User user, Lake lake) {
+        return user.getVisitedLakes().contains(lake);
+    }
+    
+
 
     public Long getId() {
         return id;

@@ -25,13 +25,101 @@ showImage(currentIndex);
 // Обработчик кнопки "На главную"
 const returnButton = document.getElementById("back-button");
 returnButton.addEventListener("click", () => {
-    window.location.href = '/main';
+    window.history.back();
 });
 
 // Обработчики для кнопок "хочу посетить" и "уже посетил"
 const heartButton = document.getElementById('heart-button');
 const heartIcon = document.getElementById('heart-icon');
 let isHeartFilled = false;
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     const pathParts = window.location.pathname.split('/');
+//     const lakeId = pathParts[pathParts.length - 1]; 
+
+//     fetch(`/lakes/${lakeId}/status`)  // На сервере сделайте API для получения текущего состояния
+//         .then(response => response.json())
+//         .then(data => {
+//             isHeartFilled = data.isWantVisit;  // Примерный формат данных от сервера
+//             heartIcon.src = isHeartFilled ? '/assets/heart_filled.png' : '/assets/heart.png';
+//         })
+//         .catch(error => console.error('Ошибка при получении состояния:', error));
+// });
+
+// heartButton.addEventListener('click', () => {
+//     const pathParts = window.location.pathname.split('/');
+//     const lakeId = pathParts[pathParts.length - 1]; 
+
+//     fetch('/check-auth', { method: 'GET' })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (!data.authenticated) {
+//                 alert('Вы должны войти в систему, чтобы добавить в "Хочу посетить".');
+//                 return;
+//             }
+
+//             isHeartFilled = !isHeartFilled;
+//             heartIcon.src = isHeartFilled ? '/assets/heart_filled.png' : '/assets/heart.png';
+            
+//             fetch(`/lakes/${lakeId}/action`, {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({ action: isHeartFilled ? 'want_visit' : 'remove_want_visit' }),
+//             })
+//             .then(response => response.json())
+//             .then(data => alert(data.message))
+//             .catch(error => console.error('Ошибка:', error));
+//         });
+// });
+
+const eyeButton = document.getElementById('eye-button');
+const eyeIcon = document.getElementById('eye-icon');
+let isEyeFilled = false;
+
+// eyeButton.addEventListener('click', () => {
+//     const pathParts = window.location.pathname.split('/');
+//     const lakeId = pathParts[pathParts.length - 1]; 
+
+//     fetch('/check-auth', { method: 'GET' })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (!data.authenticated) {
+//                 alert('Вы должны войти в систему, чтобы добавить в "Уже посетил".');
+//                 return;
+//             }
+
+//             isEyeFilled = !isEyeFilled;
+//             eyeIcon.src = isEyeFilled ? '/assets/eye_filled.png' : '/assets/eye.png';
+            
+//             fetch(`/lakes/${lakeId}/action`, {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({ action: isEyeFilled ? 'visited' : 'remove_visited' }),
+//             })
+//             .then(response => response.json())
+//             .then(data => alert(data.message))
+//             .catch(error => console.error('Ошибка:', error));
+//         });
+// });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const pathParts = window.location.pathname.split('/');
+    const lakeId = pathParts[pathParts.length - 1]; 
+
+    // Запрос состояния озера (хочет ли посетить и уже посетил)
+    fetch(`/lakes/${lakeId}/status`)
+        .then(response => response.json())
+        .then(data => {
+            isHeartFilled = data.isWantVisit;  // Статус кнопки "хочу посетить"
+            isEyeFilled = data.isVisited;     // Статус кнопки "уже посетил"
+
+            // Обновляем иконки на странице в зависимости от состояния
+            heartIcon.src = isHeartFilled ? '/assets/heart_filled.png' : '/assets/heart.png';
+            eyeIcon.src = isEyeFilled ? '/assets/eye_filled.png' : '/assets/eye.png';
+        })
+        .catch(error => console.error('Ошибка при получении состояния:', error));
+});
+
 heartButton.addEventListener('click', () => {
     const pathParts = window.location.pathname.split('/');
     const lakeId = pathParts[pathParts.length - 1]; 
@@ -46,21 +134,27 @@ heartButton.addEventListener('click', () => {
 
             isHeartFilled = !isHeartFilled;
             heartIcon.src = isHeartFilled ? '/assets/heart_filled.png' : '/assets/heart.png';
-            
+
             fetch(`/lakes/${lakeId}/action`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: isHeartFilled ? 'want_visit' : 'remove_want_visit' }),
             })
             .then(response => response.json())
-            .then(data => alert(data.message))
+            .then(data => {
+                alert(data.message);
+                // После выполнения действия обновляем состояние на сервере
+                fetch(`/lakes/${lakeId}/status`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Обновляем иконки после успешного действия
+                        heartIcon.src = data.isWantVisit ? '/assets/heart_filled.png' : '/assets/heart.png';
+                    });
+            })
             .catch(error => console.error('Ошибка:', error));
         });
 });
 
-const eyeButton = document.getElementById('eye-button');
-const eyeIcon = document.getElementById('eye-icon');
-let isEyeFilled = false;
 eyeButton.addEventListener('click', () => {
     const pathParts = window.location.pathname.split('/');
     const lakeId = pathParts[pathParts.length - 1]; 
@@ -75,17 +169,27 @@ eyeButton.addEventListener('click', () => {
 
             isEyeFilled = !isEyeFilled;
             eyeIcon.src = isEyeFilled ? '/assets/eye_filled.png' : '/assets/eye.png';
-            
+
             fetch(`/lakes/${lakeId}/action`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: isEyeFilled ? 'visited' : 'remove_visited' }),
             })
             .then(response => response.json())
-            .then(data => alert(data.message))
+            .then(data => {
+                alert(data.message);
+                // После выполнения действия обновляем состояние на сервере
+                fetch(`/lakes/${lakeId}/status`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Обновляем иконки после успешного действия
+                        eyeIcon.src = data.isVisited ? '/assets/eye_filled.png' : '/assets/eye.png';
+                    });
+            })
             .catch(error => console.error('Ошибка:', error));
         });
 });
+
 
 // Обработчик отправки отзыва
 const submitButton = document.getElementById('submit-review-btn');
@@ -119,7 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('Ошибка:', error);
         });
-        
 });
 
 // Функция для создания элемента отзыва
@@ -263,5 +366,3 @@ starRating.addEventListener('mouseout', () => {
         }
     });
 });
-
-
