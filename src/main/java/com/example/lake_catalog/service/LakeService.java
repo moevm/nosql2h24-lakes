@@ -142,7 +142,7 @@ public class LakeService {
 
         // Фильтруем по глубине, если указано
         if (depth != null && !depth.isEmpty()) {
-            double depthValue = Double.parseDouble(depth); // Преобразуем глубину в число
+            Double depthValue = Double.parseDouble(depth); // Преобразуем глубину в число
             lakes = lakes.stream()
                     .filter(lake -> lake.getDepth() <= depthValue)
                     .collect(Collectors.toList());
@@ -150,7 +150,7 @@ public class LakeService {
 
         // Фильтруем по площади, если указано
         if (square != null && !square.isEmpty()) {
-            double squareValue = Double.parseDouble(square); // Преобразуем площадь в число
+            Double squareValue = Double.parseDouble(square); // Преобразуем площадь в число
             lakes = lakes.stream()
                     .filter(lake -> lake.getSquare() <= squareValue)
                     .collect(Collectors.toList());

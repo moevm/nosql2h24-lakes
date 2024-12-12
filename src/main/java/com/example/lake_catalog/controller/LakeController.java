@@ -53,6 +53,10 @@ public class LakeController {
                                @RequestParam(required = false) String region,
                                @RequestParam(required = false) String rating,
                                HttpSession session) {
+        if(lakeRepository.count()==0){
+            lakeService.initialize();
+        }
+                                   
         int pageSize = 8; // Количество озер на одной странице
 
         // Вызываем метод фильтрации
@@ -102,9 +106,9 @@ public class LakeController {
             model.addAttribute("isInWantVisit", isInWantVisit);
             model.addAttribute("isInVisited", isInVisited);
 
-            return "card/card"; // Имя представления для отображения информации об озере
+            return "card/card";
         } else {
-            return "error"; // Если озеро не найдено
+            return "error";
         }
     }
 
@@ -177,8 +181,12 @@ public class LakeController {
 
     @GetMapping("/initialize")
     public ResponseEntity<Void> initialize() {
-        lakeService.initialize();
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/lakes")).build();
+        if(lakeRepository.count()==0){
+            lakeService.initialize();
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("/lakes/main")).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
     }
 
     @GetMapping("/regions")

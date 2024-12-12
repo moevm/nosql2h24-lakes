@@ -176,9 +176,9 @@ public class UserController {
                     Lake lake = existingLake.get();
                     lake.setRegion((String) properties.get("region"));
                     lake.setCity((String) properties.get("city"));
-                    lake.setRating(((Number) properties.get("rating")).doubleValue());
-                    lake.setDepth(((Number) properties.get("depth")).doubleValue());
-                    lake.setSquare(((Number) properties.get("square")).doubleValue());
+                    lake.setRating((Double) properties.get("rating"));
+                    lake.setDepth((Double) properties.get("depth"));
+                    lake.setSquare((Double) properties.get("square"));
                     lake.setDescription((String) properties.get("description"));
                     lake.setPhotos((List<String>) properties.get("photos"));
                     
@@ -189,9 +189,9 @@ public class UserController {
                     lake.setName(name);
                     lake.setRegion((String) properties.get("region"));
                     lake.setCity((String) properties.get("city"));
-                    lake.setRating(((Number) properties.get("rating")).doubleValue());
-                    lake.setDepth(((Number) properties.get("depth")).doubleValue());
-                    lake.setSquare(((Number) properties.get("square")).doubleValue());
+                    lake.setRating((Double) properties.get("rating"));
+                    lake.setDepth((Double) properties.get("depth"));
+                    lake.setSquare((Double) properties.get("square"));
                     lake.setDescription((String) properties.get("description"));
                     lake.setPhotos((List<String>) properties.get("photos"));
                     
