@@ -28,7 +28,6 @@ services:
       NEO4J_AUTH: neo4j/neo4jneo4j
     volumes:
       - db_data:/data 
-      - ./backups:/backups
     healthcheck:
       test: ["CMD-SHELL", "cypher-shell -u neo4j -p neo4jneo4j 'RETURN 1' || exit 1"]
       interval: 10s
@@ -40,7 +39,6 @@ services:
 volumes:
   db_data:
   app_data:  
-  backups:
   
 
 networks:
