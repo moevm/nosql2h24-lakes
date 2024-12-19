@@ -21,13 +21,14 @@ services:
       - app-network
 
   db:
-    image: neo4j:5.12  # Указываем нужную версию Neo4j
+    build:
+      context: ./db 
+      dockerfile: Dockerfile
     environment:
-      NEO4J_AUTH: neo4j/neo4jneo4j  # Устанавливаем пароль для базы данных
+      NEO4J_AUTH: neo4j/neo4jneo4j
     volumes:
-      - db_data:/data  # Монтируем том для хранения данных базы данных
+      - db_data:/data 
       - ./backups:/backups
-      - ./db/restore-script.sh:/restore-script.sh  # Монтируем скрипт восстановления
     healthcheck:
       test: ["CMD-SHELL", "cypher-shell -u neo4j -p neo4jneo4j 'RETURN 1' || exit 1"]
       interval: 10s
@@ -35,11 +36,12 @@ services:
       retries: 5
     networks:
       - app-network
-    command: ["bash", "/restore-script.sh"]  # Выполняем скрипт восстановления, а затем запускаем Neo4j
 
 volumes:
-  db_data: 
-  app_data:
+  db_data:
+  app_data:  
+  backups:
+  
 
 networks:
   app-network:
