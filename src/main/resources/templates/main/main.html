@@ -45,18 +45,18 @@
         <!-- Пагинация -->
         <div class="pagination">
             <!-- Кнопка "Назад" -->
-            <a th:href="@{/lakes/main(page=${currentPage - 1}, name=${name}, depth=${depth}, square=${square}, city=${city}, region=${region}, rating=${rating})}"
+            <a th:href="@{/lakes/main(page=${currentPage - 1}, name=${name}, min_depth=${depth}, max_depth=${max_depth}, min_square=${min_square},  max_square=${max_square}, city=${city}, region=${region}, rating=${rating})}"
             th:if="${!lakePage.first}" class="page-link">Назад</a>
 
             <!-- Отображение номеров страниц -->
             <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                <a th:href="@{/lakes/main(page=${i}, name=${name}, depth=${depth}, square=${square}, city=${city}, region=${region}, rating=${rating})}"
+                <a th:href="@{/lakes/main(page=${i}, name=${name},  min_depth=${depth}, max_depth=${max_depth}, min_square=${min_square},  max_square=${max_square}, city=${city}, region=${region}, rating=${rating})}"
                 th:text="${i + 1}"
                 th:class="${i == currentPage ? 'page-link active' : 'page-link'}"></a>
             </th:block>
 
             <!-- Кнопка "Вперед" -->
-            <a th:href="@{/lakes/main(page=${currentPage + 1}, name=${name}, depth=${depth}, square=${square}, city=${city}, region=${region}, rating=${rating})}"
+            <a th:href="@{/lakes/main(page=${currentPage + 1}, name=${name},  min_depth=${depth}, max_depth=${max_depth}, min_square=${min_square},  max_square=${max_square}, city=${city}, region=${region}, rating=${rating})}"
             th:if="${!lakePage.last}" class="page-link">Вперед</a>
         </div>
 

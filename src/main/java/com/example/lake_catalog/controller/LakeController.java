@@ -47,20 +47,22 @@ public class LakeController {
     public String showMainPage(Model model,
                                @RequestParam(defaultValue = "0") int page,
                                @RequestParam(required = false) String name,
-                               @RequestParam(required = false) String depth,
-                               @RequestParam(required = false) String square,
+                               @RequestParam(required = false) String min_depth,
+                               @RequestParam(required = false) String max_depth,
+                               @RequestParam(required = false) String min_square,
+                               @RequestParam(required = false) String max_square,
                                @RequestParam(required = false) String city,
                                @RequestParam(required = false) String region,
                                @RequestParam(required = false) String rating,
                                HttpSession session) {
-        if(lakeRepository.count()==0){
-            lakeService.initialize();
-        }
+        // if(lakeRepository.count()==0){
+        //     lakeService.initialize();
+        // }
                                    
         int pageSize = 8; // Количество озер на одной странице
 
         // Вызываем метод фильтрации
-        Page<Lake> lakePage = lakeService.filterLakes(name, depth, square, city, region, rating, page, pageSize);
+        Page<Lake> lakePage = lakeService.filterLakes(name, min_depth, max_depth, min_square, max_square, city, region, rating, page, pageSize);
 
         // Параметры пагинации
         int totalPages = lakePage.getTotalPages();
@@ -79,8 +81,10 @@ public class LakeController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("name", name);
-        model.addAttribute("depth", depth);
-        model.addAttribute("square", square);
+        model.addAttribute("min_depth", min_depth);
+        model.addAttribute("max_depth", max_depth);
+        model.addAttribute("min_square", min_square);
+        model.addAttribute("max_square", max_square);
         model.addAttribute("city", city);
         model.addAttribute("region", region);
         model.addAttribute("rating", rating);

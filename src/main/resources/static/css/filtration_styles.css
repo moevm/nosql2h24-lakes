@@ -96,6 +96,18 @@ input[type="number"] {
     font-family: 'Century Gothic', Arial, sans-serif;
 }
 
+.input-range {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.input-range input {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 input[type="text"] {
     font-family: 'Century Gothic', Arial, sans-serif;
 }
@@ -149,8 +161,13 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
     padding: 10px;
+    z-index: 1;
 }
 
+.map {
+    z-index: 2;
+
+}
 .checkbox-container label {
     margin: 5px 0;
 }

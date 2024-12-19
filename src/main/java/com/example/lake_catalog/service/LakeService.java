@@ -130,7 +130,7 @@ public class LakeService {
         lakeRepository.save(lake);
     }
 
-    public Page<Lake> filterLakes(String name, String depth, String square, String city, String region, String rating, int page, int pageSize) {
+    public Page<Lake> filterLakes(String name, String min_depth, String max_depth, String min_square, String max_square, String city, String region, String rating, int page, int pageSize) {
         List<Lake> lakes = lakeRepository.findAll(); // Загружаем все озера
 
         // Фильтруем по имени, если указано
@@ -141,18 +141,20 @@ public class LakeService {
         }
 
         // Фильтруем по глубине, если указано
-        if (depth != null && !depth.isEmpty()) {
-            Double depthValue = Double.parseDouble(depth); // Преобразуем глубину в число
+        if (max_depth != null && min_depth != null && !min_depth.isEmpty() && !max_depth.isEmpty()) {
+            Double min_depthValue = Double.parseDouble(min_depth); // Преобразуем глубину в число
+            Double max_depthValue = Double.parseDouble(max_depth);
             lakes = lakes.stream()
-                    .filter(lake -> lake.getDepth() <= depthValue)
+                    .filter(lake -> lake.getDepth() <= max_depthValue && lake.getDepth() >= min_depthValue)
                     .collect(Collectors.toList());
         }
 
         // Фильтруем по площади, если указано
-        if (square != null && !square.isEmpty()) {
-            Double squareValue = Double.parseDouble(square); // Преобразуем площадь в число
+        if (min_square != null && !min_square.isEmpty() && max_square != null && !max_square.isEmpty()) {
+            Double min_squareValue = Double.parseDouble(min_square); // Преобразуем площадь в число
+            Double max_squareValue = Double.parseDouble(max_square);
             lakes = lakes.stream()
-                    .filter(lake -> lake.getSquare() <= squareValue)
+                    .filter(lake -> lake.getSquare() <= max_squareValue && lake.getSquare() >= min_squareValue)
                     .collect(Collectors.toList());
         }
 

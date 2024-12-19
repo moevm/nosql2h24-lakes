@@ -4,10 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const returnButton = document.getElementById("returnButton");
     const applyFiltersButton = document.getElementById("applyFilters");
 
-    const depthRange = document.getElementById("depthRange");
-    const depthInput = document.getElementById("depthInput");
-    const areaRange = document.getElementById("areaRange");
-    const areaInput = document.getElementById("areaInput");
+    const depthInputMin = document.getElementById("depthInputMin");
+    const depthInputMax = document.getElementById("depthInputMax");
+    const areaInputMin = document.getElementById("areaInputMin");
+    const areaInputMax = document.getElementById("areaInputMax");
     const regionInput = document.getElementById("regionInput");
     const regionList = document.getElementById("regionList");
     const regionSearch = document.getElementById("regionSearch");
@@ -58,34 +58,52 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     // Обработчик для синхронизации значения глубины (range и input)
-    depthRange.addEventListener("input", () => {
-        depthInput.value = depthRange.value;
-    });
+    // depthRange.addEventListener("input", () => {
+    //     depthInput.value = depthRange.value;
+    // });
 
-    depthInput.addEventListener("input", () => {
-        // Проверка, чтобы значение было в допустимых пределах
-        if (depthInput.value < depthRange.min) {
-            depthInput.value = depthRange.min;
-        } else if (depthInput.value > depthRange.max) {
-            depthInput.value = depthRange.max;
-        }
-        depthRange.value = depthInput.value;
-    });
+    // depthInput.addEventListener("input", () => {
+    //     // Проверка, чтобы значение было в допустимых пределах
+    //     if (depthInput.value < depthRange.min) {
+    //         depthInput.value = depthRange.min;
+    //     } else if (depthInput.value > depthRange.max) {
+    //         depthInput.value = depthRange.max;
+    //     }
+    //     depthRange.value = depthInput.value;
+    // });
 
     // Обработчик для синхронизации значения площади (range и input)
-    areaRange.addEventListener("input", () => {
-        areaInput.value = areaRange.value;
-    });
+    // areaRange.addEventListener("input", () => {
+    //     areaInput.value = areaRange.value;
+    // });
 
-    areaInput.addEventListener("input", () => {
-        // Проверка, чтобы значение было в допустимых пределах
-        if (areaInput.value < areaRange.min) {
-            areaInput.value = areaRange.min;
-        } else if (areaInput.value > areaRange.max) {
-            areaInput.value = areaRange.max;
+    // areaInput.addEventListener("input", () => {
+    //     // Проверка, чтобы значение было в допустимых пределах
+    //     if (areaInput.value < areaRange.min) {
+    //         areaInput.value = areaRange.min;
+    //     } else if (areaInput.value > areaRange.max) {
+    //         areaInput.value = areaRange.max;
+    //     }
+    //     areaRange.value = areaInput.value;
+    // });
+
+    function validateRange(minInput, maxInput) {
+        const minValue = parseFloat(minInput.value);
+        const maxValue = parseFloat(maxInput.value);
+
+        if (minValue > maxValue) {
+            maxInput.setCustomValidity("Максимальное значение должно быть больше минимального.");
+        } else {
+            maxInput.setCustomValidity("");
         }
-        areaRange.value = areaInput.value;
-    });
+    }
+
+    // Обработчики для валидации
+    depthInputMin.addEventListener("input", () => validateRange(depthInputMin, depthInputMax));
+    depthInputMax.addEventListener("input", () => validateRange(depthInputMin, depthInputMax));
+
+    areaInputMin.addEventListener("input", () => validateRange(areaInputMin, areaInputMax));
+    areaInputMax.addEventListener("input", () => validateRange(areaInputMin, areaInputMax));
 
     // Обработчик кнопки поиска
     // searchButton.addEventListener("click", () => {
@@ -109,9 +127,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        addInput('depth', document.getElementById('depthInput').value || document.getElementById('depthRange').value);
+        addInput('min_depth', document.getElementById('depthInputMin').value);
+        addInput('max_depth', document.getElementById('depthInputMax').value);
         addInput('region', Array.from(document.querySelectorAll('#regionList input:checked')).map(input => input.value).join(','));
-        addInput('square', document.getElementById('areaInput').value || document.getElementById('areaRange').value);
+        addInput('min_square', document.getElementById('areaInputMin').value);
+        addInput('max_square', document.getElementById('areaInputMax').value);
         addInput('rating', Array.from(document.querySelectorAll('.rating input:checked')).map(input => input.id).join(','));
         addInput('city', Array.from(document.querySelectorAll('#cityList input:checked')).map(input => input.value).join(','));
         addInput('name', document.getElementById('searchInput').value.trim());
@@ -122,6 +142,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     returnButton.addEventListener("click", () => {
         window.location.href = '/main';
+    });
+
+    const map = L.map("map").setView([60.0, 30.0], 7); // Центр карты
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+    let drawnRectangle;
+    map.on("click", (e) => {
+        if (drawnRectangle) map.removeLayer(drawnRectangle);
+        const bounds = [[e.latlng.lat - 0.1, e.latlng.lng - 0.1], [e.latlng.lat + 0.1, e.latlng.lng + 0.1]];
+        drawnRectangle = L.rectangle(bounds, { color: "blue", weight: 1 }).addTo(map);
+    });
+
+    document.getElementById("searchByArea").addEventListener("click", () => {
+        if (drawnRectangle) {
+            const bounds = drawnRectangle.getBounds();
+            const area = {
+                north: bounds.getNorth(),
+                south: bounds.getSouth(),
+                east: bounds.getEast(),
+                west: bounds.getWest(),
+            };
+            fetch("/api/lakes/searchByArea", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(area),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Найденные озера:", data);
+                })
+                .catch((error) => console.error("Ошибка поиска:", error));
+        } else {
+            alert("Выделите область на карте.");
+        }
     });
 });
 

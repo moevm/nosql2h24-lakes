@@ -17,4 +17,10 @@
 
 <a href=" ./../../../actions/workflows/7_app_is_ready.yml" >![7. App is ready]( ./../../actions/workflows/7_app_is_ready.yml/badge.svg)</a>
 
+## Данные для входа в приложение
 
+Логин: alina@gmail.com
+Пароль: 123
+
+Логин: oksana@gmail.com
+Пароль: oksana
