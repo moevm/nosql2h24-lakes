@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статистика</title>
+  <!-- <link rel="stylesheet" href="statistics_styles.css"> -->
+  <link rel="stylesheet" href="/css/statistics_styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="#" class="back-btn">На главную</a>
+      <h1>Статистика</h1>
+      <button class="profile-btn" onclick="goToProfile()">
+        <img th:src="${userPhoto}" alt="Профиль" class="profile-img">
+      </button>
+    </header>
+
+    <section class="content">
+      <h2>Для каких параметров построить статистику:</h2>
+      <form>    
+        <label>
+          <input type="radio" name="param" value="area"> По площади озер
+        </label><br>
+      
+        <label>
+          <input type="radio" name="param" value="depth"> По глубине озер
+        </label><br>
+      
+        <label>
+          <input type="radio" name="param" value="rating" checked> По рейтингу озер
+        </label><br>
+      
+        <label>
+          <input type="radio" name="param" value="reviews"> По количеству отзывов
+        </label><br>
+      
+        <button type="submit" class="btn">Построить</button>
+      </form>
+      
+    </section>
+  </div>
+  <!-- <script src="import-export_script.js"></script> -->
+  <script src="/JavaScript/statistics_script.js"></script>
+</body>
+</html>
