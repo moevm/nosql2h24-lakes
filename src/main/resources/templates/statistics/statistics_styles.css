@@ -1,0 +1,91 @@
+body {
+    font-family: 'Century Gothic', Arial, sans-serif;
+    background-color: #E6F0FF;
+}
+
+/* Основной контейнер */
+
+.container {
+    
+    padding: 30px;
+    border-radius: 10px;
+    width: 85%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 32px;
+    font-weight: 1000;
+    color: #003366;
+}
+
+.profile-btn {
+    border: none;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.back-btn {
+    padding: 10px 20px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #012850;  
+}
+
+.content h2 {
+    font-size: 18px;
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+.content {
+    width: 500px;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    font-size: 16px;
+    color: #003366;
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+form .btn {
+    font-family: 'Century Gothic', Arial, sans-serif;
+    padding: 10px 20px;
+    background-color: #003366;
+    font-size: 1rem;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+form .btn:hover {
+    background-color: #012850;
+}
