@@ -141,20 +141,20 @@ public class LakeService {
         }
 
         // Фильтруем по глубине, если указано
-        if (max_depth != null && min_depth != null && !min_depth.isEmpty() && !max_depth.isEmpty()) {
-            Double min_depthValue = Double.parseDouble(min_depth); // Преобразуем глубину в число
-            Double max_depthValue = Double.parseDouble(max_depth);
+        if ((min_depth != null && !min_depth.isEmpty()) || (max_depth != null && !max_depth.isEmpty())) {
+            Double min_depthValue = min_depth != null && !min_depth.isEmpty() ? Double.parseDouble(min_depth) : 0.0; // По умолчанию 0
+            Double max_depthValue = max_depth != null && !max_depth.isEmpty() ? Double.parseDouble(max_depth) : Double.MAX_VALUE; // По умолчанию MAX_VALUE
             lakes = lakes.stream()
-                    .filter(lake -> lake.getDepth() <= max_depthValue && lake.getDepth() >= min_depthValue)
+                    .filter(lake -> lake.getDepth() >= min_depthValue && lake.getDepth() <= max_depthValue)
                     .collect(Collectors.toList());
         }
 
         // Фильтруем по площади, если указано
-        if (min_square != null && !min_square.isEmpty() && max_square != null && !max_square.isEmpty()) {
-            Double min_squareValue = Double.parseDouble(min_square); // Преобразуем площадь в число
-            Double max_squareValue = Double.parseDouble(max_square);
+        if ((min_square != null && !min_square.isEmpty()) || (max_square != null && !max_square.isEmpty())) {
+            Double min_squareValue = min_square != null && !min_square.isEmpty() ? Double.parseDouble(min_square) : 0.0; // По умолчанию 0
+            Double max_squareValue = max_square != null && !max_square.isEmpty() ? Double.parseDouble(max_square) : Double.MAX_VALUE; // По умолчанию MAX_VALUE
             lakes = lakes.stream()
-                    .filter(lake -> lake.getSquare() <= max_squareValue && lake.getSquare() >= min_squareValue)
+                    .filter(lake -> lake.getSquare() >= min_squareValue && lake.getSquare() <= max_squareValue)
                     .collect(Collectors.toList());
         }
 
