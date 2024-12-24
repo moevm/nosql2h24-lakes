@@ -7,9 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserService {
@@ -91,6 +96,24 @@ public class UserService {
         // Сохраняем изменения
         userRepository.save(user);
     }
+
+    
+    public void updateUserPhotoUrl(Long userId, String photoUrl) {
+        // Проверяем существование пользователя
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+    
+        // Проверяем, что ссылка валидна (опционально)
+        if (!photoUrl.startsWith("http://") && !photoUrl.startsWith("https://")) {
+            throw new IllegalArgumentException("Некорректная ссылка на фото.");
+        }
+    
+        // Обновляем ссылку на фото
+        user.setPhoto(photoUrl);
+        userRepository.save(user);
+    }
+    
+
 
     // Проверка, есть ли озеро в списке "хочу посетить"
     public boolean isLakeInWantVisit(Long userId, Long lakeId) {
