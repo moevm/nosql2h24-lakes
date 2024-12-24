@@ -17,8 +17,10 @@
         <div class="profile-info">
             <div class="profile-photo-container">
                 <img th:src="${user.photo}" alt="Фото пользователя" class="profile-photo" id="profile-photo">
-                <!-- <input type="file" id="upload-photo" accept="image/*" style="display: none;">
-                <button id="change-photo-button">Изменить фото</button> -->
+                <button id="change-photo-button">Изменить фото</button>
+                <input type="text" id="photo-url-input" placeholder="Введите ссылку на фото" style="display: none;">
+                <button id="save-photo-button" style="display: none;">Сохранить фото</button>
+                <button id="cancel-photo-button" style="display: none;">Отмена</button>
             </div>
             <div class="user-details">
                 <!-- Поля для отображения имени и email -->
