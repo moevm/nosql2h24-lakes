@@ -75,6 +75,54 @@ select {
     align-items: center;
     gap: 10px;
 }
+
+.input-range {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.input-range input {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+#map {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: relative; 
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 200px;
+    transition: all 0.3s ease-in-out;
+    z-index: 1;
+}
+
+#map.fullscreen {
+    position: fixed; /* Карта будет на весь экран */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000; /* Выводим карту на передний план */
+    border-radius: 0;
+}
+
+#fullscreenControls {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
+}
+
+#fullscreenControls.visible {
+    display: flex;
+    gap: 10px;
+}
 /* Цвет звездочек */
 .star {
     color: #003366;
@@ -96,18 +144,6 @@ input[type="number"] {
     font-family: 'Century Gothic', Arial, sans-serif;
 }
 
-.input-range {
-    display: flex;
-    gap: 10px;
-    margin-top: 5px;
-}
-
-.input-range input {
-    width: 100px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
 input[type="text"] {
     font-family: 'Century Gothic', Arial, sans-serif;
 }
@@ -127,6 +163,7 @@ input[type="text"] {
 .dropdown {
     position: relative;
     width: 90%;
+    z-index: 2;
 }
 
 #regionInput,
@@ -161,13 +198,8 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
     padding: 10px;
-    z-index: 1;
 }
 
-.map {
-    z-index: 2;
-
-}
 .checkbox-container label {
     margin: 5px 0;
 }

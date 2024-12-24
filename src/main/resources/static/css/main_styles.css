@@ -72,7 +72,7 @@ header {
     width: 300px;
 }
 
-.filter-btn {
+.filter-btn, .mapsearch-btn {
     padding: 10px 20px;
     background-color: #003366;
     color: #FFFFFF;

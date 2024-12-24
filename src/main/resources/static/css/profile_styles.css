@@ -60,7 +60,7 @@ header {
     color: #666;
 }
 
-#import-export-button, #back-button, #logout-button {
+#import-export-button, #back-button, #logout-button, #save-photo-button, #cancel-photo-button, #change-photo-button{
     margin-top: 10px;
     padding: 10px 20px;
     background-color: #003366;
@@ -143,6 +143,13 @@ header {
     text-align: center;
     color: #003366;
     font-weight: bold;
+}
+
+#photo-url-input {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 20px;
+    width: 300px;
 }
 
 
