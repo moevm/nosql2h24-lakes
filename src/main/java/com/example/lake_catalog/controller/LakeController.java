@@ -43,6 +43,11 @@ public class LakeController {
         this.lakeService = lakeService;
     }
 
+    @GetMapping("/main/search")
+    public String mainSearch() {
+        return "MapSearch/map-search";
+    }
+
     @GetMapping("/main")
     public String showMainPage(Model model,
                                @RequestParam(defaultValue = "0") int page,
