@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Optional;
 import com.example.lake_catalog.model.*;
 import com.example.lake_catalog.repository.LakeRepository;
@@ -97,7 +99,7 @@ public class UserController {
 
     @PutMapping("/profile/{userId}/update-profile")
     public ResponseEntity<Map<String, String>> updateUserProfile(
-            @PathVariable Long userId, // Заменили @RequestParam на @PathVariable для userId
+            @PathVariable Long userId,
             @RequestParam String newName,
             @RequestParam String newEmail) {
         try {
@@ -113,11 +115,30 @@ public class UserController {
         }
     }
 
+    @PutMapping("/profile/{userId}/update-photo-url")
+    public ResponseEntity<Map<String, String>> updateUserPhotoUrl(
+            @PathVariable Long userId,
+            @RequestBody Map<String, String> request) {
+        try {
+            String photoUrl = request.get("photoUrl");
+            userService.updateUserPhotoUrl(userId, photoUrl);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Ссылка на фото обновлена успешно!");
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+
+
     @GetMapping("/profile/{userId}/imp_exp/export")
     public void exportLakes(HttpServletResponse response) throws IOException {
         List<Lake> lakes = lakeRepository.findAll();
 
-        // Преобразуем каждый объект в нужный формат
+        
         List<Map<String, Object>> exportData = new ArrayList<>();
         for (Lake lake : lakes) {
             Map<String, Object> lakeData = new HashMap<>();
@@ -132,7 +153,7 @@ public class UserController {
             properties.put("photos", lake.getPhotos());
 
             Map<String, Object> lakeItem = new HashMap<>();
-            lakeItem.put("identity", lake.getId());  // предполагаем, что getId() возвращает идентификатор
+            lakeItem.put("identity", lake.getId()); 
             lakeItem.put("labels", List.of("Lake"));
             lakeItem.put("properties", properties);
 
