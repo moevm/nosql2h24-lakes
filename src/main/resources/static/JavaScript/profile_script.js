@@ -125,3 +125,68 @@ async function updateProfile(newName, newEmail) {
         alert('Ошибка при обновлении профиля: ' + errorData.message);
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const changePhotoButton = document.getElementById('change-photo-button');
+    const savePhotoButton = document.getElementById('save-photo-button');
+    const cancelPhotoButton = document.getElementById('cancel-photo-button');
+    const photoUrlInput = document.getElementById('photo-url-input');
+
+    // Показать поле для ввода ссылки
+    changePhotoButton.addEventListener('click', () => {
+        photoUrlInput.style.display = 'inline-block';
+        savePhotoButton.style.display = 'inline-block';
+        cancelPhotoButton.style.display = 'inline-block';
+        changePhotoButton.style.display = 'none';
+    });
+
+    // Сохранить новую ссылку на фото
+    savePhotoButton.addEventListener('click', async () => {
+        const newPhotoUrl = photoUrlInput.value.trim();
+
+        if (!newPhotoUrl) {
+            alert('Введите ссылку на фото.');
+            return;
+        }
+
+        const userId = window.location.pathname.split('/').pop();
+
+        try {
+            const response = await fetch(`/users/profile/${userId}/update-photo-url`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ photoUrl: newPhotoUrl }),
+            });
+
+            if (response.ok) {
+                document.getElementById('profile-photo').src = newPhotoUrl; // Обновить фото на странице
+                alert('Фото обновлено успешно!');
+            } else {
+                const errorData = await response.json();
+                alert('Ошибка при обновлении фото: ' + errorData.message);
+            }
+        } catch (error) {
+            alert('Ошибка подключения к серверу.');
+        } finally {
+            resetPhotoEditingState(); // Возвращаем интерфейс в исходное состояние
+        }
+    });
+
+    // Отмена изменения фото
+    cancelPhotoButton.addEventListener('click', () => {
+        resetPhotoEditingState(); // Возвращаем интерфейс в исходное состояние
+    });
+
+    // Функция для сброса состояния редактирования фото
+    function resetPhotoEditingState() {
+        photoUrlInput.style.display = 'none';
+        savePhotoButton.style.display = 'none';
+        cancelPhotoButton.style.display = 'none';
+        changePhotoButton.style.display = 'inline-block';
+        photoUrlInput.value = ''; // Очистить поле ввода
+    }
+});
+
+

@@ -144,38 +144,121 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = '/main';
     });
 
-    const map = L.map("map").setView([60.0, 30.0], 7); // Центр карты
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    // =======================Поиск по области на карте====================
+const mapElement = document.getElementById("map");
+const fullscreenControls = document.getElementById("fullscreenControls");
+const confirmSelectionButton = document.getElementById("confirmSelection");
+const exitFullscreenButton = document.getElementById("exitFullscreen");
 
-    let drawnRectangle;
-    map.on("click", (e) => {
-        if (drawnRectangle) map.removeLayer(drawnRectangle);
-        const bounds = [[e.latlng.lat - 0.1, e.latlng.lng - 0.1], [e.latlng.lat + 0.1, e.latlng.lng + 0.1]];
-        drawnRectangle = L.rectangle(bounds, { color: "blue", weight: 1 }).addTo(map);
-    });
+// Инициализация карты Leaflet
+const map = L.map("map").setView([60.0, 30.0], 6);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+}).addTo(map);
 
-    document.getElementById("searchByArea").addEventListener("click", () => {
-        if (drawnRectangle) {
-            const bounds = drawnRectangle.getBounds();
-            const area = {
-                north: bounds.getNorth(),
-                south: bounds.getSouth(),
-                east: bounds.getEast(),
-                west: bounds.getWest(),
-            };
-            fetch("/api/lakes/searchByArea", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(area),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log("Найденные озера:", data);
-                })
-                .catch((error) => console.error("Ошибка поиска:", error));
-        } else {
-            alert("Выделите область на карте.");
+// Инициализация Leaflet Draw
+const drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+const drawControl = new L.Control.Draw({
+    edit: {
+        featureGroup: drawnItems,
+    },
+    draw: {
+        polygon: false,
+        polyline: false,
+        rectangle: true,
+        circle: false,
+        marker: false,
+        circlemarker: false,
+    },
+});
+map.addControl(drawControl);
+
+// Массив для хранения названий найденных озер
+const lakeNames = [];
+
+// Функция для выполнения запроса к Overpass API
+const fetchLakesInArea = async (bounds) => {
+    const [south, west, north, east] = bounds;
+    const query = `
+        [out:json];
+        (
+          way["natural"="water"]["water"="lake"](${south},${west},${north},${east});
+          relation["natural"="water"]["water"="lake"](${south},${west},${north},${east});
+        );
+        out tags;
+    `;
+    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Ошибка запроса: ${response.status}`);
         }
+        const data = await response.json();
+        const lakes = data.elements;
+
+        // Очистка текущего массива и добавление названий озер
+        lakeNames.length = 0;
+        lakes.forEach((lake) => {
+            if (lake.tags && lake.tags.name) {
+                lakeNames.push(lake.tags.name);
+            }
+        });
+
+        console.log("Найденные озера:", lakeNames);
+        alert(`Найдено ${lakeNames.length} озер. Смотрите консоль для деталей.`);
+    } catch (error) {
+        console.error("Ошибка при запросе озер:", error);
+        alert("Произошла ошибка при поиске озер. Проверьте консоль для деталей.");
+    }
+};
+
+// Обработчик завершения рисования
+map.on(L.Draw.Event.CREATED, (event) => {
+    const layer = event.layer;
+    drawnItems.addLayer(layer);
+
+    // Выделение области цветом
+    layer.setStyle({
+        color: "#00ff00", // Цвет выделенной области
+        fillOpacity: 0.5, // Прозрачность заливки
     });
+
+    // Получение координат области (юг, запад, север, восток)
+    const bounds = layer.getBounds();
+    const south = bounds.getSouth();
+    const west = bounds.getWest();
+    const north = bounds.getNorth();
+    const east = bounds.getEast();
+
+    // Поиск озер в выделенной области
+    fetchLakesInArea([south, west, north, east]);
+});
+
+// Обработчик нажатия на карту для перехода в полноэкранный режим
+mapElement.addEventListener("click", () => {
+    mapElement.classList.add("fullscreen");
+    fullscreenControls.classList.add("visible");
+});
+
+// Обработчик кнопки "Закрыть"
+exitFullscreenButton.addEventListener("click", () => {
+    mapElement.classList.remove("fullscreen");
+    fullscreenControls.classList.remove("visible");
+});
+
+// Обработчик кнопки "ОК"
+confirmSelectionButton.addEventListener("click", () => {
+    alert("Выбор области подтвержден!");
+    mapElement.classList.remove("fullscreen");
+    fullscreenControls.classList.remove("visible");
+});
+
+    
+
+// =========================================================================
+
 });
 
